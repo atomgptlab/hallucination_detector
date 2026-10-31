@@ -1,0 +1,6 @@
+httpx>=0.24
+rapidfuzz>=3.0
+pdfplumber>=0.10
+openai>=1.0
+pandas>=1.5
+numpy>=1.23

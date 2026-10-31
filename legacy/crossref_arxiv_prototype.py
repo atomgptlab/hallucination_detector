@@ -1,6 +1,9 @@
 """
-Hallucination Finder (references verifier)
------------------------------------------
+LEGACY PROTOTYPE: Crossref + arXiv reference checker.
+
+This early prototype is kept for reference only. It is NOT the method
+evaluated in the paper; see ``hallucination.py`` for that.
+
 Given a PDF research paper, this script:
 
 1) Extracts the references section text from the PDF.
@@ -15,8 +18,9 @@ Given a PDF research paper, this script:
    - A matplotlib “colorbar” style figure (0–100%)
 
 Notes / reality check:
-- Reference parsing from PDFs is inherently messy. This does a solid heuristic job without external services like GROBID.
-- Crossref tends to work well for DOI/journal references; arXiv works for preprints.
+- Reference parsing from PDFs is inherently messy. This does a solid
+  heuristic job without external services like GROBID.
+- Crossref works well for DOI/journal references; arXiv for preprints.
 - If you want “production-grade” reference parsing, integrate GROBID later.
 
 Dependencies:
@@ -26,10 +30,10 @@ Dependencies:
   pip install rapidfuzz
 
 Usage:
-  python hallucination_finder.py path/to/paper.pdf --outdir out
+  python legacy/crossref_arxiv_prototype.py path/to/paper.pdf --outdir out
 
 Also includes a no-PDF demo:
-  python hallucination_finder.py --demo
+  python legacy/crossref_arxiv_prototype.py --demo
 """
 
 from __future__ import annotations
@@ -64,6 +68,7 @@ ARXIV_API = "http://export.arxiv.org/api/query"
 # Utilities: normalization & similarity
 # ----------------------------
 
+
 def normalize_text(s: str) -> str:
     s = s.strip()
     s = unicodedata.normalize("NFKD", s)
@@ -89,6 +94,7 @@ def title_similarity(a: str, b: str) -> float:
         return float(fuzz_ratio(a_n, b_n)) / 100.0
 
     import difflib
+
     return difflib.SequenceMatcher(None, a_n, b_n).ratio()
 
 
@@ -112,7 +118,9 @@ def extract_doi(ref: str) -> Optional[str]:
 
 def extract_arxiv_id(ref: str) -> Optional[str]:
     # New style: 1707.08567 ; Old style: hep-th/9901001
-    m = re.search(r"\barxiv:\s*([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)\b", ref, flags=re.I)
+    m = re.search(
+        r"\barxiv:\s*([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)\b", ref, flags=re.I
+    )
     if m:
         return m.group(1)
     m = re.search(r"\b([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)\b", ref)
@@ -130,7 +138,8 @@ def guess_title_from_reference(ref: str) -> Optional[str]:
 
     Strategies:
       1) If something is in quotes “...”, "...", or ‘...’: treat as title.
-      2) Otherwise, remove DOI/arXiv, then try to capture the chunk between authors and venue/year.
+      2) Otherwise, remove DOI/arXiv, then try to capture the chunk
+         between authors and venue/year.
          Common pattern: Authors. Title. Journal ...
     """
     ref_clean = ref.strip()
@@ -155,16 +164,24 @@ def guess_title_from_reference(ref: str) -> Optional[str]:
     parts = [p.strip() for p in ref_clean.split(".") if p.strip()]
     if len(parts) >= 2:
         # Often: [authors] [title] [venue...]
-        # Choose the part with "title-like" length (not too short) and not containing obvious venue tokens
+        # Choose a "title-like" part: not too short and free of obvious
+        # venue tokens
         candidates = []
-        for p in parts[1:3]:  # typically the next one or two chunks after authors
-            if 8 <= len(p) <= 240 and not re.search(r"\b(nature|science|proc|journal|phys|rev|letters|conf|vol|no|pp)\b", p, flags=re.I):
+        for p in parts[
+            1:3
+        ]:  # typically the next one or two chunks after authors
+            if 8 <= len(p) <= 240 and not re.search(
+                r"\b(nature|science|proc|journal|phys|rev|letters|conf"
+                r"|vol|no|pp)\b",
+                p,
+                flags=re.I,
+            ):
                 candidates.append(p)
         if candidates:
             # pick the longest candidate
             return max(candidates, key=len).strip(" ,;")
 
-    # 3) As a fallback, try to find something before the year that looks like a title
+    # 3) Fallback: find something before the year that looks like a title
     y = safe_int_year(ref_clean)
     if y:
         before_year = ref_clean.split(str(y))[0]
@@ -179,7 +196,8 @@ def guess_title_from_reference(ref: str) -> Optional[str]:
 
 def guess_first_author_lastname(ref: str) -> Optional[str]:
     """
-    Very rough: take the first token before a comma, or the first surname-like token.
+    Very rough: take the first token before a comma, or the first
+    surname-like token.
     """
     s = ref.strip()
     # "Smith, J." or "Smith J."
@@ -200,6 +218,7 @@ def guess_first_author_lastname(ref: str) -> Optional[str]:
 # PDF extraction & reference splitting
 # ----------------------------
 
+
 def extract_pdf_text(pdf_path: str) -> str:
     """
     Extract text from PDF using pdfplumber if available; else try PyMuPDF.
@@ -210,6 +229,7 @@ def extract_pdf_text(pdf_path: str) -> str:
     # Try pdfplumber
     try:
         import pdfplumber  # type: ignore
+
         text_chunks = []
         with pdfplumber.open(pdf_path) as pdf:
             for page in pdf.pages:
@@ -223,6 +243,7 @@ def extract_pdf_text(pdf_path: str) -> str:
     # Fallback to PyMuPDF
     try:
         import fitz  # type: ignore
+
         doc = fitz.open(pdf_path)
         text_chunks = []
         for page in doc:
@@ -231,7 +252,8 @@ def extract_pdf_text(pdf_path: str) -> str:
         return "\n".join(text_chunks)
     except Exception as e:
         raise RuntimeError(
-            "Could not extract text. Install pdfplumber (recommended) or pymupdf.\n"
+            "Could not extract text. Install pdfplumber (recommended) "
+            "or pymupdf.\n"
             "pip install pdfplumber\n"
             "or\n"
             "pip install pymupdf"
@@ -240,7 +262,8 @@ def extract_pdf_text(pdf_path: str) -> str:
 
 def find_references_section(full_text: str) -> str:
     """
-    Heuristic: locate a 'References' / 'Bibliography' / 'Works Cited' header and return text after it.
+    Heuristic: locate a 'References' / 'Bibliography' / 'Works Cited'
+    header and return the text after it.
     """
     text = full_text
 
@@ -326,7 +349,10 @@ def split_references(ref_text: str) -> List[str]:
 # API querying
 # ----------------------------
 
-def crossref_lookup(ref: str, timeout: float = 20.0) -> Optional[Dict[str, Any]]:
+
+def crossref_lookup(
+    ref: str, timeout: float = 20.0
+) -> Optional[Dict[str, Any]]:
     """
     Query Crossref for the best match.
     Strategy:
@@ -334,7 +360,9 @@ def crossref_lookup(ref: str, timeout: float = 20.0) -> Optional[Dict[str, Any]]
       - else: use /works?query.bibliographic=...&rows=1
     """
     doi = extract_doi(ref)
-    headers = {"User-Agent": "HallucinationFinder/0.1 (mailto:you@example.com)"}
+    headers = {
+        "User-Agent": "HallucinationFinder/0.1 (mailto:you@example.com)"
+    }
 
     try:
         if doi:
@@ -347,7 +375,9 @@ def crossref_lookup(ref: str, timeout: float = 20.0) -> Optional[Dict[str, Any]]
             return None
 
         params = {"query.bibliographic": ref, "rows": 1}
-        r = requests.get(CROSSREF_API, params=params, headers=headers, timeout=timeout)
+        r = requests.get(
+            CROSSREF_API, params=params, headers=headers, timeout=timeout
+        )
         if r.status_code != 200:
             return None
         items = r.json().get("message", {}).get("items", [])
@@ -388,7 +418,9 @@ def arxiv_lookup(ref: str, timeout: float = 20.0) -> Optional[Dict[str, Any]]:
         title = tag("title")
         published = tag("published")
         # Authors appear as <name> inside <author>
-        authors = re.findall(r"<author>\s*<name>(.*?)</name>", entry, flags=re.S)
+        authors = re.findall(
+            r"<author>\s*<name>(.*?)</name>", entry, flags=re.S
+        )
         authors = [re.sub(r"\s+", " ", a).strip() for a in authors]
 
         # id is a URL
@@ -437,6 +469,7 @@ def arxiv_lookup(ref: str, timeout: float = 20.0) -> Optional[Dict[str, Any]]:
 # Scoring
 # ----------------------------
 
+
 @dataclass
 class MatchResult:
     ref_raw: str
@@ -464,7 +497,9 @@ class MatchResult:
     best_id: Optional[str]
 
 
-def crossref_fields(item: Dict[str, Any]) -> Tuple[Optional[str], Optional[int], Optional[str], Optional[str]]:
+def crossref_fields(
+    item: Dict[str, Any],
+) -> Tuple[Optional[str], Optional[int], Optional[str], Optional[str]]:
     title = None
     if isinstance(item.get("title"), list) and item.get("title"):
         title = item["title"][0]
@@ -474,7 +509,13 @@ def crossref_fields(item: Dict[str, Any]) -> Tuple[Optional[str], Optional[int],
     year = None
     # Crossref often has issued.date-parts [[YYYY, MM, DD]]
     issued = item.get("issued", {}).get("date-parts")
-    if issued and isinstance(issued, list) and issued and isinstance(issued[0], list) and issued[0]:
+    if (
+        issued
+        and isinstance(issued, list)
+        and issued
+        and isinstance(issued[0], list)
+        and issued[0]
+    ):
         try:
             year = int(issued[0][0])
         except Exception:
@@ -526,7 +567,12 @@ def score_candidate(
 
     s_author = 0.0
     if ref_first_author and cand_first_author:
-        s_author = 1.0 if normalize_text(ref_first_author) == normalize_text(cand_first_author) else 0.0
+        s_author = (
+            1.0
+            if normalize_text(ref_first_author)
+            == normalize_text(cand_first_author)
+            else 0.0
+        )
     elif ref_first_author is None or cand_first_author is None:
         s_author = 0.35
 
@@ -542,6 +588,7 @@ def score_candidate(
 # ----------------------------
 # Main pipeline
 # ----------------------------
+
 
 def analyze_pdf(
     pdf_path: str,
@@ -567,8 +614,17 @@ def analyze_pdf(
         cr_title = cr_year = cr_doi = cr_first_author = None
         cr_score = None
         if cr_item:
-            cr_title, cr_year, cr_doi, cr_first_author = crossref_fields(cr_item)
-            cr_score = score_candidate(guessed_title, guessed_year, guessed_first_author, cr_title, cr_year, cr_first_author)
+            cr_title, cr_year, cr_doi, cr_first_author = crossref_fields(
+                cr_item
+            )
+            cr_score = score_candidate(
+                guessed_title,
+                guessed_year,
+                guessed_first_author,
+                cr_title,
+                cr_year,
+                cr_first_author,
+            )
 
         time.sleep(polite_delay_s)
 
@@ -585,7 +641,14 @@ def analyze_pdf(
                 # arXiv author list is typically "First Last" - take last token
                 first = str(authors[0])
                 ax_first_author = first.split()[-1] if first.split() else first
-            ax_score = score_candidate(guessed_title, guessed_year, guessed_first_author, ax_title, ax_year, ax_first_author)
+            ax_score = score_candidate(
+                guessed_title,
+                guessed_year,
+                guessed_first_author,
+                ax_title,
+                ax_year,
+                ax_first_author,
+            )
 
         # Choose best
         best_source = None
@@ -634,13 +697,17 @@ def analyze_pdf(
     return results
 
 
-def save_outputs(results: List[MatchResult], outdir: str) -> Tuple[str, str, str]:
+def save_outputs(
+    results: List[MatchResult], outdir: str
+) -> Tuple[str, str, str]:
     os.makedirs(outdir, exist_ok=True)
 
     # JSON
     json_path = os.path.join(outdir, "hallucination_finder_report.json")
     with open(json_path, "w", encoding="utf-8") as f:
-        json.dump([asdict(r) for r in results], f, indent=2, ensure_ascii=False)
+        json.dump(
+            [asdict(r) for r in results], f, indent=2, ensure_ascii=False
+        )
 
     # CSV
     rows = []
@@ -655,8 +722,16 @@ def save_outputs(results: List[MatchResult], outdir: str) -> Tuple[str, str, str
                 "guessed_title": r.guessed_title,
                 "guessed_year": r.guessed_year,
                 "guessed_first_author": r.guessed_first_author,
-                "crossref_score_pct": None if r.crossref_score is None else round(100.0 * r.crossref_score, 2),
-                "arxiv_score_pct": None if r.arxiv_score is None else round(100.0 * r.arxiv_score, 2),
+                "crossref_score_pct": (
+                    None
+                    if r.crossref_score is None
+                    else round(100.0 * r.crossref_score, 2)
+                ),
+                "arxiv_score_pct": (
+                    None
+                    if r.arxiv_score is None
+                    else round(100.0 * r.arxiv_score, 2)
+                ),
                 "ref_raw": r.ref_raw,
             }
         )
@@ -703,6 +778,7 @@ def plot_colorbar(results: List[MatchResult], fig_path: str) -> None:
 # Demo without PDFs
 # ----------------------------
 
+
 def demo_run() -> None:
     demo_refs = [
         "[1] A. Vaswani, N. Shazeer, N. Parmar, et al. Attention Is All You Need. NeurIPS, 2017.",
@@ -722,8 +798,17 @@ def demo_run() -> None:
         cr_title = cr_year = cr_doi = cr_first_author = None
         cr_score = None
         if cr_item:
-            cr_title, cr_year, cr_doi, cr_first_author = crossref_fields(cr_item)
-            cr_score = score_candidate(guessed_title, guessed_year, guessed_first_author, cr_title, cr_year, cr_first_author)
+            cr_title, cr_year, cr_doi, cr_first_author = crossref_fields(
+                cr_item
+            )
+            cr_score = score_candidate(
+                guessed_title,
+                guessed_year,
+                guessed_first_author,
+                cr_title,
+                cr_year,
+                cr_first_author,
+            )
 
         time.sleep(0.25)
 
@@ -738,7 +823,14 @@ def demo_run() -> None:
             if authors and isinstance(authors, list) and authors:
                 first = str(authors[0])
                 ax_first_author = first.split()[-1] if first.split() else first
-            ax_score = score_candidate(guessed_title, guessed_year, guessed_first_author, ax_title, ax_year, ax_first_author)
+            ax_score = score_candidate(
+                guessed_title,
+                guessed_year,
+                guessed_first_author,
+                ax_title,
+                ax_year,
+                ax_first_author,
+            )
 
         best_source = None
         best_score = 0.0
@@ -799,13 +891,32 @@ def demo_run() -> None:
 # CLI
 # ----------------------------
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Hallucination Finder: verify references in a PDF via Crossref + arXiv.")
+    parser = argparse.ArgumentParser(
+        description="Hallucination Finder: verify references in a PDF via Crossref + arXiv."
+    )
     parser.add_argument("pdf", nargs="?", help="Path to PDF file.")
-    parser.add_argument("--outdir", default="out_hallucination_finder", help="Output directory.")
-    parser.add_argument("--max-refs", type=int, default=None, help="Limit number of references analyzed.")
-    parser.add_argument("--polite-delay", type=float, default=0.25, help="Delay between API calls (seconds).")
-    parser.add_argument("--demo", action="store_true", help="Run a demo without a PDF.")
+    parser.add_argument(
+        "--outdir",
+        default="out_hallucination_finder",
+        help="Output directory.",
+    )
+    parser.add_argument(
+        "--max-refs",
+        type=int,
+        default=None,
+        help="Limit number of references analyzed.",
+    )
+    parser.add_argument(
+        "--polite-delay",
+        type=float,
+        default=0.25,
+        help="Delay between API calls (seconds).",
+    )
+    parser.add_argument(
+        "--demo", action="store_true", help="Run a demo without a PDF."
+    )
     args = parser.parse_args()
 
     if args.demo:
@@ -815,7 +926,9 @@ def main():
     if not args.pdf:
         raise SystemExit("Provide a PDF path, or use --demo.")
 
-    results = analyze_pdf(args.pdf, polite_delay_s=args.polite_delay, max_refs=args.max_refs)
+    results = analyze_pdf(
+        args.pdf, polite_delay_s=args.polite_delay, max_refs=args.max_refs
+    )
     json_path, csv_path, fig_path = save_outputs(results, args.outdir)
 
     # Print summary
@@ -823,13 +936,17 @@ def main():
     avg = sum(scores_pct) / len(scores_pct) if scores_pct else 0.0
     print(f"Analyzed {len(results)} references.")
     print(f"Average best score: {avg:.2f}%")
-    print(f"Saved:\n  JSON: {json_path}\n  CSV:  {csv_path}\n  FIG:  {fig_path}")
+    print(
+        f"Saved:\n  JSON: {json_path}\n  CSV:  {csv_path}\n  FIG:  {fig_path}"
+    )
 
     # Show top likely hallucinations (low scores)
     low = sorted(results, key=lambda r: r.best_score)[: min(10, len(results))]
     print("\nLowest-score references (potential issues):")
     for r in low:
-        print(f"  #{r.ref_index:03d}  {100.0*r.best_score:6.2f}%  {r.guessed_title or '(no title guessed)'}")
+        print(
+            f"  #{r.ref_index:03d}  {100.0*r.best_score:6.2f}%  {r.guessed_title or '(no title guessed)'}"
+        )
 
 
 if __name__ == "__main__":
