@@ -8,15 +8,17 @@ field that was not extracted) can be re-scored without new API calls.
 Re-scoring uses the per-field scores of the candidate selected under the
 default weights; under other weights a different top-k candidate could in
 principle win, so the result is exact for that candidate and a close
-approximation for the tool as a whole.
+approximation for the tool as a whole. The author scores themselves are
+taken as stored, so ``--scoring`` changes only the missing-field rule.
 
 Usage
 -----
-    python scripts/rescore_sensitivity.py results.csv [more.csv ...]
+    python scripts/rescore_sensitivity.py --scoring v2 results.csv
 
-Each file is summarised separately. If a file has a ``truth`` column with
-values ``genuine``/``fabricated``, precision, recall and false-positive rate
-are also reported (a citation is "flagged" if it is not ``verified``).
+If a file has a ground-truth column (``truth`` with genuine/fabricated, or
+``GT_label`` with real/fake), precision, recall and false-positive rate are
+reported; a citation counts as flagged if it is not ``verified``. Rows
+without a score (e.g. not run) are dropped.
 """
 
 import argparse
@@ -27,70 +29,95 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from hallucination import classify  # noqa: E402
+from hallucination import SCORING_VERSIONS, classify  # noqa: E402
 
 VARIANTS = [
     ("default 60/25/15", (0.60, 0.25, 0.15), False),
     ("40/45/15", (0.40, 0.45, 0.15), False),
-    ("40/60/0 (no journal)", (0.40, 0.60, 0.00), False),
     ("30/60/10", (0.30, 0.60, 0.10), False),
+    ("40/60/0 (no journal)", (0.40, 0.60, 0.00), False),
     ("60/25/15 + author veto", (0.60, 0.25, 0.15), True),
-    ("40/45/15 + author veto", (0.40, 0.45, 0.15), True),
 ]
+THRESHOLDS = (75, 80, 85, 90)
 
 
-def rescore(df, weights, veto=False):
+def rescore(df, weights, veto=False, scoring="v2"):
     wt, wa, wj = weights
     t = df["title_score"].astype(float)
     a = df["author_score"].astype(float)
     j = df["journal_score"].astype(float)
-    comp = wt * t + wa * a.fillna(t) + wj * j.fillna(t)
+    if scoring == "v1":
+        comp = wt * t + wa * a.fillna(t) + wj * j.fillna(t)
+    else:
+        num = wt * t + wa * a.fillna(0) + wj * j.fillna(0)
+        den = wt + wa * a.notna() + wj * j.notna()
+        comp = (num / den).where(den > 0, 0.0)
     status = comp.map(classify)
     if veto:
         status = status.where(~(a == 0), "likely hallucinated")
     return comp, status
 
 
-def summarise(df, name):
-    print(f"\n== {name} (n={len(df)})")
-    has_truth = "truth" in df.columns
-    hdr = f"{'variant':26s} {'verified':>8s} {'partial':>8s} {'likely':>8s}"
-    if has_truth:
-        hdr += f" {'prec':>6s} {'recall':>6s} {'FPR':>6s}"
+def truth_of(df):
+    if "truth" in df.columns:
+        return df["truth"].eq("fabricated")
+    if "GT_label" in df.columns:
+        return df["GT_label"].eq("fake")
+    return None
+
+
+def metrics(flag, fab):
+    tp = int((flag & fab).sum())
+    fp = int((flag & ~fab).sum())
+    n_fab, n_gen = int(fab.sum()), int((~fab).sum())
+    prec = tp / max(tp + fp, 1)
+    return prec, tp / max(n_fab, 1), fp / max(n_gen, 1), tp, fp
+
+
+def summarise(df, name, scoring):
+    fab = truth_of(df)
+    print(f"\n== {name} (n={len(df)}, scoring={scoring})")
+    hdr = f"{'variant':24s} {'verif':>6s} {'part':>6s} {'likely':>6s}"
+    if fab is not None:
+        hdr += (
+            f" {'prec':>6s} {'recall':>6s} {'FPR':>6s} {'TP':>4s} {'FP':>4s}"
+        )
     print(hdr)
     for label, w, veto in VARIANTS:
-        _, st = rescore(df, w, veto)
-        counts = [int((st == s).sum()) for s in ("verified", "partial")]
-        counts.append(int((st == "likely hallucinated").sum()))
-        line = f"{label:26s} " + " ".join(f"{c:8d}" for c in counts)
-        if has_truth:
-            flag = st != "verified"
-            fab = df["truth"].eq("fabricated")
-            tp = int((flag & fab).sum())
-            fp = int((flag & ~fab).sum())
-            prec = tp / max(tp + fp, 1)
-            rec = tp / max(int(fab.sum()), 1)
-            fpr = fp / max(int((~fab).sum()), 1)
-            line += f" {prec:6.2f} {rec:6.2f} {fpr:6.2f}"
+        _, st = rescore(df, w, veto, scoring)
+        c = [int((st == s).sum()) for s in ("verified", "partial")]
+        c.append(int((st == "likely hallucinated").sum()))
+        line = f"{label:24s} " + " ".join(f"{x:6d}" for x in c)
+        if fab is not None:
+            p, r, f, tp, fp = metrics(st != "verified", fab)
+            line += f" {p:6.2f} {r:6.2f} {f:6.2f} {tp:4d} {fp:4d}"
         print(line)
-
-    comp, _ = rescore(df, (0.60, 0.25, 0.15))
+    comp, _ = rescore(df, (0.60, 0.25, 0.15), scoring=scoring)
     print("verified-threshold sweep (default weights):")
-    for thr in (70, 75, 80, 85, 90):
-        print(f"  S >= {thr}: {int((comp >= thr).sum())} verified")
+    for thr in THRESHOLDS:
+        line = f"  S >= {thr}: {int((comp >= thr).sum())} verified"
+        if fab is not None:
+            p, r, f, tp, fp = metrics(comp < thr, fab)
+            line += f"  prec {p:.2f} recall {r:.2f} FPR {f:.2f}"
+        print(line)
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("csv", nargs="+")
+    ap.add_argument("--scoring", choices=SCORING_VERSIONS, default="v2")
     args = ap.parse_args(argv)
     for path in args.csv:
         df = pd.read_csv(path)
-        if "score" in df.columns:
-            comp, _ = rescore(df, (0.60, 0.25, 0.15))
-            err = np.abs(comp - df["score"]).max()
+        score_col = next(
+            (c for c in ("score", "composite_score") if c in df.columns), None
+        )
+        if score_col:
+            df = df[df[score_col].notna()].copy()
+            comp, _ = rescore(df, (0.60, 0.25, 0.15), scoring=args.scoring)
+            err = np.abs(comp - df[score_col]).max()
             print(f"{path}: max |recomputed - reported| = {err:.2f}")
-        summarise(df, os.path.basename(path))
+        summarise(df, os.path.basename(path), args.scoring)
 
 
 if __name__ == "__main__":

@@ -58,11 +58,19 @@ LLM_MODEL = os.environ.get("LLM_MODEL", "")
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "")
 LLM_TIMEOUT = float(os.environ.get("LLM_TIMEOUT", "60"))
 
-# Scoring defaults. These are the values used for every result reported in
-# the paper; change them only through the function arguments.
+# Scoring defaults (change them through the function arguments).
 WEIGHTS = (0.60, 0.25, 0.15)  # title, authors, journal
 VERIFIED_THRESHOLD = 80.0
 PARTIAL_THRESHOLD = 60.0
+
+# Two versions of the scoring rule are supported:
+#   "v2" (default, current): a missing author/journal field is dropped and
+#        the remaining weights are renormalized; an author matches on
+#        surname AND first initial.
+#   "v1" (original, until July 2026): a missing field is replaced by the
+#        title score; an author matches on surname only.
+SCORING_VERSIONS = ("v1", "v2")
+DEFAULT_SCORING = "v2"
 
 _CACHE: dict = {}
 
@@ -139,8 +147,8 @@ def fuzzy_score(a: str, b: str) -> float:
     return 100.0 * len(s1 & s2) / len(s1 | s2)
 
 
-def author_score(cited: list[str], candidate: list[str]) -> float:
-    """Percentage of cited authors whose surname appears in the candidate.
+def author_score_v1(cited: list[str], candidate: list[str]) -> float:
+    """v1: percentage of cited authors whose surname is in the candidate.
 
     The surname of a cited author is the last whitespace token of the name,
     lower-cased. It matches if it equals any whitespace token of any
@@ -159,18 +167,73 @@ def author_score(cited: list[str], candidate: list[str]) -> float:
     return 100.0 * matched / len(cited)
 
 
+def name_key(name: str) -> tuple[str, str]:
+    """(surname, first initial): lower-cased, periods/commas removed."""
+    parts = re.sub(r"[.,]", " ", name.lower()).split()
+    if not parts:
+        return ("", "")
+    return (parts[-1], parts[0][0])
+
+
+def author_score_v2(cited: list[str], candidate: list[str]) -> float:
+    """v2: percentage of cited authors matching on surname AND initial.
+
+    Both names are reduced with :func:`name_key`. A cited author matches if
+    some candidate author has the same surname and, when both initials are
+    known, the same first initial. Requiring the initial stops a fabricated
+    reference from inheriting credit from a real paper by an author with a
+    common surname. Returns -1 if either list has no usable name.
+    """
+    keys = [name_key(n) for n in candidate if n]
+    keys = [k for k in keys if k[0]]
+    if not cited or not keys:
+        return -1.0
+    matched = 0
+    for ea in cited:
+        if not ea.strip():
+            continue
+        sur, init = name_key(ea)
+        if sur and any(
+            sur == s2 and (not init or not i2 or init == i2) for s2, i2 in keys
+        ):
+            matched += 1
+    return 100.0 * matched / len(cited)
+
+
+def author_score(
+    cited: list[str], candidate: list[str], scoring: str = DEFAULT_SCORING
+) -> float:
+    """Author similarity in [0, 100], or -1 if missing (see versions)."""
+    if scoring == "v1":
+        return author_score_v1(cited, candidate)
+    return author_score_v2(cited, candidate)
+
+
 def composite_score(
     title: float,
     authors: float,
     journal: float,
     weights: tuple[float, float, float] = WEIGHTS,
+    scoring: str = DEFAULT_SCORING,
 ) -> float:
-    """Weighted composite; a missing (negative) field takes the title score."""
+    """Weighted composite of the field scores (negative = missing).
+
+    v2: missing fields are dropped and the weights renormalized.
+    v1: a missing field takes the title score.
+    """
     wt, wa, wj = weights
-    comp = wt * title
-    comp += wa * (authors if authors >= 0 else title)
-    comp += wj * (journal if journal >= 0 else title)
-    return comp
+    if scoring == "v1":
+        comp = wt * title
+        comp += wa * (authors if authors >= 0 else title)
+        comp += wj * (journal if journal >= 0 else title)
+        return comp
+    parts = [(title, wt)]
+    if authors >= 0:
+        parts.append((authors, wa))
+    if journal >= 0:
+        parts.append((journal, wj))
+    wsum = sum(w for _, w in parts)
+    return sum(x * w for x, w in parts) / wsum if wsum else 0.0
 
 
 def classify(
@@ -403,6 +466,7 @@ def verify_reference(
     weights: tuple[float, float, float] = WEIGHTS,
     author_veto: bool = False,
     papers: list | None = None,
+    scoring: str = DEFAULT_SCORING,
 ) -> dict:
     """Score one structured reference against Semantic Scholar.
 
@@ -417,11 +481,14 @@ def verify_reference(
     author_veto : bool
         If True, a citation whose extracted authors match none of the best
         candidate's authors (author score 0) is labelled
-        ``likely hallucinated`` regardless of its composite. Off by default;
-        all results in the paper use the default (off) unless stated.
+        ``likely hallucinated`` regardless of its composite. Off by default.
     papers : list, optional
         Pre-fetched candidates (Semantic Scholar JSON); skips the API call.
+    scoring : {"v2", "v1"}
+        Scoring-rule version (see ``SCORING_VERSIONS``). Default "v2".
     """
+    if scoring not in SCORING_VERSIONS:
+        raise ValueError(f"scoring must be one of {SCORING_VERSIONS}")
     title = ref.get("title", "")
     target = title or ref.get("raw", "")
     query = clean_query(target)
@@ -452,11 +519,11 @@ def verify_reference(
             continue
         ts = fuzzy_score(cand_title, target)
         cand_authors = [a.get("name", "") for a in p.get("authors", []) or []]
-        a_s = author_score(cited_authors, cand_authors)
+        a_s = author_score(cited_authors, cand_authors, scoring)
         venue = _venue(p)
         j_s = fuzzy_score(cited_journal, venue) if cited_journal else -1.0
         cand_year = str(p.get("year", ""))
-        comp = composite_score(ts, a_s, j_s, weights)
+        comp = composite_score(ts, a_s, j_s, weights, scoring)
         if comp > best["score"]:
             best = {
                 "score": comp,
@@ -554,6 +621,7 @@ def main(argv=None):
     ap.add_argument("--top-k", type=int, default=5)
     ap.add_argument("--sleep", type=float, default=2.0)
     ap.add_argument("--author-veto", action="store_true")
+    ap.add_argument("--scoring", choices=SCORING_VERSIONS, default="v2")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
@@ -570,6 +638,7 @@ def main(argv=None):
         sleep_sec=args.sleep,
         top_k=args.top_k,
         author_veto=args.author_veto,
+        scoring=args.scoring,
     )
     if args.output:
         with open(args.output, "w", encoding="utf-8") as f:

@@ -34,46 +34,53 @@ def ref(**kw):
     return base
 
 
-def test_exact_match_is_verified():
-    r = h.verify_reference(ref(), papers=[PAPER])
+@pytest.mark.parametrize("v", h.SCORING_VERSIONS)
+def test_exact_match_is_verified(v):
+    r = h.verify_reference(ref(), papers=[PAPER], scoring=v)
     assert r["score"] == 100.0
     assert r["status"] == "verified"
     assert r["year_match"] is True
 
 
 def test_composite_formula():
-    assert h.composite_score(100, 0, 50) == pytest.approx(67.5)
-    assert h.composite_score(80, -1, -1) == pytest.approx(80.0)
-    assert h.composite_score(80, 0, -1) == pytest.approx(0.75 * 80)
+    for v in h.SCORING_VERSIONS:
+        assert h.composite_score(100, 0, 50, scoring=v) == pytest.approx(67.5)
+        assert h.composite_score(80, -1, -1, scoring=v) == pytest.approx(80)
+    # missing author: v1 substitutes the title score, v2 renormalizes
+    assert h.composite_score(80, -1, 0, scoring="v1") == pytest.approx(68)
+    assert h.composite_score(80, -1, 0, scoring="v2") == pytest.approx(64)
 
 
-def test_fabricated_authors_drop_score():
-    r = h.verify_reference(
-        ref(authors=["John Doe", "Jane Smith"]), papers=[PAPER]
-    )
+@pytest.mark.parametrize("v", h.SCORING_VERSIONS)
+def test_fabricated_authors_drop_score(v):
+    fake = ref(authors=["John Doe", "Jane Smith"])
+    r = h.verify_reference(fake, papers=[PAPER], scoring=v)
     assert r["author_score"] == 0.0
     assert r["score"] == pytest.approx(75.0)
     assert r["status"] == "partial"
-    vetoed = h.verify_reference(
-        ref(authors=["John Doe", "Jane Smith"]),
-        papers=[PAPER],
-        author_veto=True,
-    )
-    assert vetoed["status"] == "likely hallucinated"
+    r = h.verify_reference(fake, papers=[PAPER], scoring=v, author_veto=True)
+    assert r["status"] == "likely hallucinated"
 
 
-def test_missing_fields_substitute_title_score():
-    r = h.verify_reference(ref(authors=[], journal=""), papers=[PAPER])
+@pytest.mark.parametrize("v", h.SCORING_VERSIONS)
+def test_missing_fields(v):
+    blank = ref(authors=[], journal="")
+    r = h.verify_reference(blank, papers=[PAPER], scoring=v)
     assert r["author_score"] is None and r["journal_score"] is None
     assert r["score"] == r["title_score"] == 100.0
 
 
 def test_author_matching_rules():
-    # surname = last whitespace token, compared case-insensitively
-    assert h.author_score(["V. Fung"], ["Victor Fung"]) == 100.0
-    # documented limitations: no diacritic folding, "et al." counts
-    assert h.author_score(["S. Grazulis"], ["Saulius Gražulis"]) == 0.0
-    assert h.author_score(["V. Fung", "et al."], ["Victor Fung"]) == 50.0
+    gr = ["Saulius Gražulis"]
+    for v in h.SCORING_VERSIONS:
+        assert h.author_score(["V. Fung"], ["Victor Fung"], v) == 100.0
+        # documented limitations: no diacritic folding, "et al." counts
+        assert h.author_score(["S. Grazulis"], gr, v) == 0.0
+        etal = ["V. Fung", "et al."]
+        assert h.author_score(etal, ["Victor Fung"], v) == 50.0
+    # v2 also requires the first initial; v1 does not
+    assert h.author_score(["H. Zhang"], ["Dinghuai Zhang"], "v1") == 100.0
+    assert h.author_score(["H. Zhang"], ["Dinghuai Zhang"], "v2") == 0.0
 
 
 def test_thresholds():
@@ -89,7 +96,12 @@ def test_no_candidates_is_hallucinated():
     assert r["status"] == "likely hallucinated"
 
 
-def test_regex_fallback_extracts_titles():
+def test_unknown_scoring_version():
+    with pytest.raises(ValueError):
+        h.verify_reference(ref(), papers=[PAPER], scoring="v3")
+
+
+def test_regex_fallback_extracts_references():
     refs = h.extract_refs_regex(h.SAMPLE_TEXT)
     assert len(refs) == 4
     assert "AtomGPT" in refs[2]["raw"]
