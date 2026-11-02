@@ -1,58 +1,96 @@
 # Hallucination Detector
 
-Reference-hallucination detector for scientific manuscripts. Each citation is
-parsed into bibliographic fields by an LLM, matched against
-[Semantic Scholar](https://www.semanticscholar.org/product/api), and labelled
-**verified**, **partial** or **likely hallucinated** from a per-field
-similarity score. This is the scoring code behind the AtomGPT.org reference
-checker evaluated in:
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)
+
+Detect hallucinated (fabricated) citations in scientific manuscripts.
+Each reference is parsed into bibliographic fields by an LLM, matched
+against [Semantic Scholar](https://www.semanticscholar.org/product/api),
+and labelled **verified**, **partial** or **likely hallucinated** from an
+interpretable per-field similarity score.
+
+This is the code and benchmark data behind the
+[AtomGPT.org reference checker](https://atomgpt.org/hallucination_detector)
+described in:
 
 > H. Neralla, J. Lee, A. H. Romero, K. Choudhary, *Hallucination Detector: A
 > hybrid LLM and Semantic Scholar tool calling for detecting hallucination in
 > scientific literature on AtomGPT.org* (under review).
 
-Benchmark data, per-citation outputs and the analysis notebook for the paper
-are in
-[harineralla/AtomGPT-Hallucination-Detector](https://github.com/harineralla/AtomGPT-Hallucination-Detector).
+## How it works
 
-## Repository layout
+```
+citation text ──► 1. LLM extraction ──► {title, authors, journal, year}
+                     (regex fallback)              │
+                                                   ▼
+                  2. Semantic Scholar search (top-k candidates by title)
+                                                   │
+                                                   ▼
+                  3. per-field similarity   title 60% · authors 25% · journal 15%
+                                                   │
+                                                   ▼
+                  4. composite score  ≥ 80 verified · 60–80 partial · < 60 likely hallucinated
+```
 
-| Path | Contents |
-|------|----------|
-| `hallucination.py` | Extraction, retrieval, scoring (`verify_reference`) and CLI |
-| `scripts/rescore_sensitivity.py` | Re-scores released outputs under other weights / author veto / thresholds |
-| `scripts/materials_pilot.py` | Reproduces the materials-science pilot |
-| `tests/test_scoring.py` | Offline tests of the deterministic scoring stage |
-| `legacy/crossref_arxiv_prototype.py` | Early Crossref + arXiv prototype (not used in the paper) |
+Steps 3 and 4 are deterministic and fully specified [below](#scoring).
+Fabricated references are caught mostly through the **author** term: an
+LLM can produce a plausible title and a real venue, but rarely the right
+author list for a paper that exists.
 
-## Install
+## Layout
+
+```
+hallucination_detector/
+├── config.py               # reads API keys / endpoints from env vars
+├── hallucination.py        # core pipeline: extract → retrieve → score → label
+├── run_benchmark.py        # CLI runner (concurrent, resumable, fail-fast)
+├── requirements.txt
+├── data/                   # benchmarks used in the paper
+│   ├── neurips2025_hallucinated.json   # 100 confirmed fabrications
+│   ├── citeaudit_300.json              # 150 real + 150 fake
+│   └── materials_pilot.json            # 26 genuine materials references
+├── results/                # per-citation outputs reported in the paper
+│   ├── neurips2025_v1.json
+│   ├── citeaudit_300_v2.json
+│   └── materials_pilot_v2.json
+├── scripts/
+│   ├── rescore_sensitivity.py   # re-score outputs under other weights/thresholds
+│   └── materials_pilot.py       # harvested-vs-fabricated materials pilot
+├── tests/                  # offline tests (no network)
+└── legacy/                 # early Crossref + arXiv prototype (not used)
+```
+
+## Setup
 
 ```bash
 pip install -r requirements.txt
+
+# LLM used for field extraction: any OpenAI-compatible endpoint
+export LLM_URL="https://your-endpoint/v1"
+export LLM_MODEL="gpt-oss-20b"        # the model used in the paper
+export LLM_API_KEY="..."               # if the endpoint needs one
+
+# optional
+export SS_API_KEY="..."                # Semantic Scholar key (higher rate limit)
+export SS_MIN_INTERVAL=1.0             # seconds between Semantic Scholar calls
+export LLM_TIMEOUT=60
 ```
 
-## Configuration
-
-All settings come from environment variables; nothing is hard-coded.
-
-| Variable | Purpose |
-|----------|---------|
-| `SS_API_KEY` | Semantic Scholar API key (optional; raises the rate limit) |
-| `LLM_URL` | Base URL of any OpenAI-compatible chat-completions endpoint |
-| `LLM_MODEL` | Model name for extraction (the paper used `gpt-oss-20b`) |
-| `LLM_API_KEY` | API key for that endpoint, if required |
-| `LLM_TIMEOUT` | Request timeout in seconds (default 60) |
-
-Without an LLM endpoint the tool falls back to a regular-expression parser,
-which extracts titles only (author and venue terms are then treated as
-missing; see below).
+Without an LLM endpoint the tool falls back to a regular-expression parser
+that extracts titles only, so the author and venue terms are treated as
+missing. Use an LLM for meaningful results. A free
+[Semantic Scholar API key](https://www.semanticscholar.org/product/api#api-key-form)
+is strongly recommended for benchmark runs; unauthenticated requests are
+rate-limited heavily.
 
 ## Usage
 
+### Check a manuscript
+
 ```bash
-python hallucination.py                    # built-in sample references
-python hallucination.py paper.pdf -o out.json
-python hallucination.py refs.txt --author-veto
+python hallucination.py paper.pdf -o report.json   # PDF
+python hallucination.py refs.txt                   # text with a References section
+python hallucination.py                            # built-in sample
 ```
 
 ```python
@@ -64,10 +102,135 @@ ref = {
     "journal": "npj Computational Materials",
     "year": "2021",
 }
-print(verify_reference(ref))
+print(verify_reference(ref))   # {'status': 'verified', 'score': 100.0, ...}
 ```
 
-## Scoring (exact definitions)
+### Run a benchmark
+
+```bash
+python run_benchmark.py \
+    --file data/citeaudit_300.json \
+    --workers 2 \
+    --output results/citeaudit_300_run.json
+```
+
+| Flag | Description |
+|---|---|
+| `--workers N` | Concurrent worker threads (default 2); they share one Semantic Scholar rate limiter |
+| `--gt all\|true\|false` | Keep all, only real, or only fake citations |
+| `--source NAME` | Keep one `source_type` (e.g. `realworld`, `generated`) |
+| `--start N --limit M` | Run a slice of the dataset |
+| `--scoring v1\|v2` | Scoring rule (default `v2`, see [versions](#scoring-versions)) |
+| `--threshold T` | Lower bound of *verified* (default 80) |
+| `--top-k K` | Semantic Scholar candidates per citation (default 5) |
+| `--author-veto` | Author score 0 forces *likely hallucinated* |
+| `--lenient` | Score API failures 0, as the web tool does, instead of stopping |
+| `--no-resume` | Start fresh, ignoring an existing output file |
+
+The runner is **resumable**: results are saved after every citation, and
+re-running the same command picks up where it left off. It is
+**fail-fast**: an authentication, quota or persistent API error stops the
+run with exit code 2 (safe to resume) rather than silently scoring the
+citation as a hallucination.
+
+Any file in the same record format works, including the full
+[CiteAudit](https://github.com/shiiiikw/CiteAudit) `benchmark.json`, which
+is read as is.
+
+## Benchmarks
+
+| Dataset | n | Real / fake | Source |
+|---|---:|---|---|
+| `neurips2025_hallucinated.json` | 100 | 0 / 100 | Confirmed hallucinated citations in accepted NeurIPS 2025 papers ([GPTZero audit](https://gptzero.me/news/neurips/)) |
+| `citeaudit_300.json` | 300 | 150 / 150 | Balanced 300-citation sample of the [CiteAudit](https://github.com/shiiiikw/CiteAudit) benchmark (91 real-world, 209 generated) |
+| `materials_pilot.json` | 26 | 26 / 0 | Genuine materials references in five types: articles, database papers, software, crystallographic databases, bare data entries |
+
+### Results (default weights 60/25/15, verified ≥ 80)
+
+| Dataset | Scoring | Verified / partial / likely | Precision | Recall | FPR |
+|---|---|---|---:|---:|---:|
+| NeurIPS 2025 | v1 | 6 / 28 / 66 | n/a | 0.94 | n/a |
+| CiteAudit 300 | v2 | 207 / 36 / 56 | 0.80 | 0.49 | 0.12 |
+| Materials (21 literature-backed) | v2 | 19 / 2 / 0 | n/a | n/a | 0.10 |
+| Materials (5 bare data entries) | v2 | 0 / 3 / 2 | n/a | n/a | 1.00 |
+
+A citation counts as flagged when it is not *verified*. One real CiteAudit
+citation was not run and is omitted (n = 299). On CiteAudit, generated
+fakes are caught with precision 0.95, while most false positives come from
+real-world citations that Semantic Scholar does not index (textbooks,
+datasets, reports) or returned no candidate for. Bare data entries (a
+Materials Project ID, a dataset DOI) have no paper to match and are
+outside what literature matching can verify.
+
+Shifting weight to authors (40/45/15) raises CiteAudit recall to 0.59 at
+the same false-positive rate; see `scripts/rescore_sensitivity.py`.
+
+## Data format
+
+Each record in a `data/*.json` file (under the `data` key):
+
+```json
+{
+  "source_type": "realworld" | "generated" | "neurips2025" | "materials",
+  "citation": "<full citation string>",
+  "GT": true | false
+}
+```
+
+`GT = true` means a real citation and `false` a fabricated one. The materials
+set also has `category` and `label`. The runner also accepts CSV files, and
+the labels `GT_label` (`real` / `fake`) or `truth` (`genuine` / `fabricated`).
+
+## Output format
+
+```json
+{
+  "config": { "scoring_version": "v2", "weights": {...}, "extraction_model": "...", ... },
+  "results": [
+    {
+      "index": 0,
+      "source_type": "generated",
+      "citation": "...",
+      "GT": false,
+      "Pred": true,
+      "Correct": false,
+      "status": "verified",
+      "score": 94.1,
+      "title_score": 100.0,
+      "author_score": 80.0,
+      "journal_score": null,
+      "year_match": true,
+      "best_match": "<closest Semantic Scholar title>",
+      "matched_authors": [...],
+      "matched_venue": "..."
+    }
+  ],
+  "summary": {
+    "total": 299, "status": {...},
+    "TP": 74, "FP": 18, "TN": 131, "FN": 76,
+    "accuracy": 0.6856, "precision": 0.8043, "recall": 0.4933,
+    "f1": 0.6115, "false_positive_rate": 0.1208,
+    "by_source_type": {...}
+  }
+}
+```
+
+`Pred = true` means predicted real (status *verified*). A field score is
+`null` when that field was not extracted.
+
+## Evaluation
+
+A fake citation is the positive class:
+
+- **TP**: fake and flagged (not *verified*)
+- **FN**: fake but *verified* (missed)
+- **TN**: real and *verified*
+- **FP**: real but flagged (over-flagged)
+
+`Accuracy = (TP+TN)/N`, `Precision = TP/(TP+FP)`, `Recall = TP/(TP+FN)`,
+`F1 = 2·P·R/(P+R)`, `FPR = FP/(FP+TN)`.
+
+## Scoring
 
 For every one of the top-k (default 5) Semantic Scholar candidates:
 
@@ -91,15 +254,14 @@ For every one of the top-k (default 5) Semantic Scholar candidates:
 The citation receives the maximum `S` over the candidates and is labelled
 **verified** if `S >= 80`, **partial** if `60 <= S < 80`, and **likely
 hallucinated** otherwise (including when no candidate is returned).
-Weights, thresholds and an optional author veto (`author_veto=True`: an
-author score of 0 forces *likely hallucinated*) are arguments of
+Weights, thresholds and an optional author veto are arguments of
 `verify_reference`.
 
 ### Scoring versions
 
-`verify_reference(..., scoring="v2")` (default) is the current rule above.
-`scoring="v1"` reproduces the original rule, used until July 2026 and for
-the NeurIPS 2025 benchmark in the paper. It differs in two ways:
+`scoring="v2"` (default) is the current rule above. `scoring="v1"`
+reproduces the original rule, used until July 2026 and for the NeurIPS 2025
+benchmark:
 
 | | v1 (original) | v2 (current) |
 |---|---|---|
@@ -108,9 +270,9 @@ the NeurIPS 2025 benchmark in the paper. It differs in two ways:
 
 Both changes stop a fabricated reference from scoring well on the strength
 of a plausible title or a common surname alone. The CiteAudit and materials
-analyses in the paper use v2.
+results use v2.
 
-### Known limitations of the similarity functions
+### Known limitations
 
 * Surnames with diacritics do not match their ASCII spelling
   (`Grazulis` vs `Gražulis`).
@@ -118,27 +280,52 @@ analyses in the paper use v2.
   so a truncated list such as `A, B, C, et al.` scores at most 75.
 * Hyphenated surnames match only if hyphenated identically in the index.
   Surname-first strings (`Smith, J.`) take the initial as the surname.
-* If Semantic Scholar returns no candidate (not indexed, or rate-limited),
-  the score is 0 and the citation is flagged.
 * Venue abbreviations score partially against full names
   (`Phys. Rev. Lett.` vs `Physical Review Letters` = 66.7).
-* Data, software and database entries that have no indexed paper cannot be
-  verified by literature matching.
+* Works Semantic Scholar does not index (books, reports, datasets, software
+  without a paper) cannot be verified and are flagged.
 
-## Reproducing the paper analyses
+## Reproducing the paper
 
 ```bash
-# weight / veto / threshold sensitivity on the released per-citation outputs
-python scripts/rescore_sensitivity.py --scoring v1 ui_all_cols_results.csv
-python scripts/rescore_sensitivity.py --scoring v2 citeaudit_all300_combined.csv
+# sensitivity table: re-score the released outputs (no API calls)
+python scripts/rescore_sensitivity.py --scoring v1 results/neurips2025_v1.json
+python scripts/rescore_sensitivity.py --scoring v2 results/citeaudit_300_v2.json
+python scripts/rescore_sensitivity.py --scoring v2 results/materials_pilot_v2.json
 
-# materials pilot (needs network access to Semantic Scholar)
+# re-run a benchmark end to end (needs LLM + Semantic Scholar access)
+python run_benchmark.py --file data/citeaudit_300.json --output results/citeaudit_300_run.json
+python run_benchmark.py --file data/neurips2025_hallucinated.json --scoring v1 \
+    --output results/neurips2025_run.json
+
+# harvested-vs-fabricated materials pilot
 python scripts/materials_pilot.py fabricated_materials_citations.json
 
 # offline tests
 python -m pytest tests
 ```
 
+Re-running end to end can differ slightly from the released outputs:
+Semantic Scholar's index changes over time and LLM extraction is not
+bit-reproducible across model versions. The analysis notebook and figures
+are in
+[harineralla/AtomGPT-Hallucination-Detector](https://github.com/harineralla/AtomGPT-Hallucination-Detector).
+
+## Citation
+
+```bibtex
+@article{neralla2026hallucination,
+  title   = {Hallucination Detector: A hybrid LLM and Semantic Scholar tool calling
+             for detecting hallucination in scientific literature on AtomGPT.org},
+  author  = {Neralla, Harichandana and Lee, Jaehyung and Romero, Aldo H. and Choudhary, Kamal},
+  note    = {Under review},
+  year    = {2026}
+}
+```
+
+The CiteAudit subset is derived from the CiteAudit benchmark; please cite
+that work when using `data/citeaudit_300.json`.
+
 ## License
 
-See [LICENSE](LICENSE).
+Apache 2.0, see [LICENSE](LICENSE).

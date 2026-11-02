@@ -13,15 +13,20 @@ taken as stored, so ``--scoring`` changes only the missing-field rule.
 
 Usage
 -----
-    python scripts/rescore_sensitivity.py --scoring v2 results.csv
+    python scripts/rescore_sensitivity.py --scoring v1 \
+        results/neurips2025_v1.json
+    python scripts/rescore_sensitivity.py --scoring v2 \
+        results/citeaudit_300_v2.json
 
-If a file has a ground-truth column (``truth`` with genuine/fabricated, or
-``GT_label`` with real/fake), precision, recall and false-positive rate are
-reported; a citation counts as flagged if it is not ``verified``. Rows
-without a score (e.g. not run) are dropped.
+Input is a results JSON written by ``run_benchmark.py`` or a CSV. If it has a
+ground-truth column (``GT`` with true = real, ``truth`` with
+genuine/fabricated, or ``GT_label`` with real/fake), precision, recall and
+false-positive rate are reported; a citation counts as flagged if it is not
+``verified``. Rows without a score (e.g. not run) are dropped.
 """
 
 import argparse
+import json
 import os
 import sys
 
@@ -59,6 +64,8 @@ def rescore(df, weights, veto=False, scoring="v2"):
 
 
 def truth_of(df):
+    if "GT" in df.columns and df["GT"].notna().all():
+        return ~df["GT"].astype(bool)
     if "truth" in df.columns:
         return df["truth"].eq("fabricated")
     if "GT_label" in df.columns:
@@ -108,7 +115,11 @@ def main(argv=None):
     ap.add_argument("--scoring", choices=SCORING_VERSIONS, default="v2")
     args = ap.parse_args(argv)
     for path in args.csv:
-        df = pd.read_csv(path)
+        if path.lower().endswith(".json"):
+            with open(path, encoding="utf-8") as f:
+                df = pd.DataFrame(json.load(f)["results"])
+        else:
+            df = pd.read_csv(path)
         score_col = next(
             (c for c in ("score", "composite_score") if c in df.columns), None
         )

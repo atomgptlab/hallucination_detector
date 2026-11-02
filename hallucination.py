@@ -34,29 +34,34 @@ import argparse
 import io
 import json
 import logging
-import os
 import re
 import sys
+import threading
 import time
 
 import httpx
 
+from config import (  # noqa: F401  (re-exported for scripts)
+    LLM_API_KEY,
+    LLM_MODEL,
+    LLM_TIMEOUT,
+    LLM_URL,
+    SS_API_KEY,
+    SS_MIN_INTERVAL,
+    SS_SEARCH_URL,
+)
+
 log = logging.getLogger("hallucination")
 
-# ---------------------------------------------------------------------------
-# Configuration (environment variables; nothing is hard-coded)
-# ---------------------------------------------------------------------------
 
-# Semantic Scholar API key (optional, raises the rate limit).
-# https://www.semanticscholar.org/product/api
-SS_API_KEY = os.environ.get("SS_API_KEY", "")
-SS_SEARCH_URL = "https://api.semanticscholar.org/graph/v1/paper/search"
+class APIError(RuntimeError):
+    """Authentication, quota or persistent failure of an external API.
 
-# Any OpenAI-compatible chat-completions endpoint used for extraction.
-LLM_URL = os.environ.get("LLM_URL", "")
-LLM_MODEL = os.environ.get("LLM_MODEL", "")
-LLM_API_KEY = os.environ.get("LLM_API_KEY", "")
-LLM_TIMEOUT = float(os.environ.get("LLM_TIMEOUT", "60"))
+    Raised only when ``strict=True``; otherwise the tool degrades (a failed
+    extraction falls back to the regex parser, a failed search returns no
+    candidates and the citation scores 0).
+    """
+
 
 # Scoring defaults (change them through the function arguments).
 WEIGHTS = (0.60, 0.25, 0.15)  # title, authors, journal
@@ -73,6 +78,8 @@ SCORING_VERSIONS = ("v1", "v2")
 DEFAULT_SCORING = "v2"
 
 _CACHE: dict = {}
+_SS_LOCK = threading.Lock()
+_SS_LAST = [0.0]
 
 # ---------------------------------------------------------------------------
 # Optional dependencies
@@ -334,8 +341,12 @@ def _normalize_llm_items(items: list) -> list[dict]:
     return results
 
 
-def extract_refs_llm(text: str) -> list[dict]:
-    """Extract references with an OpenAI-compatible LLM endpoint."""
+def extract_refs_llm(text: str, strict: bool = False) -> list[dict]:
+    """Extract references with an OpenAI-compatible LLM endpoint.
+
+    With ``strict=True`` a failed call (network, auth, server) raises
+    :class:`APIError` instead of returning an empty list.
+    """
     if not (LLM_URL and LLM_MODEL):
         log.info("LLM not configured (LLM_URL/LLM_MODEL); skipping")
         return []
@@ -392,16 +403,36 @@ def extract_refs_llm(text: str) -> list[dict]:
         titles = re.findall(r'"title"\s*:\s*"([^"]{10,})"', raw or "")
         return [_empty_ref(t.strip(), t.strip()) for t in titles]
     except Exception as e:  # network, auth, server errors
+        if strict:
+            raise APIError(f"LLM: {type(e).__name__}: {e}") from e
         log.warning("LLM extraction failed: %s: %s", type(e).__name__, e)
         return []
 
 
-def extract_references(text: str) -> tuple[list[dict], str]:
+def extract_references(
+    text: str, strict: bool = False
+) -> tuple[list[dict], str]:
     """Try LLM extraction first, fall back to the regex parser."""
-    refs = extract_refs_llm(text)
+    refs = extract_refs_llm(text, strict=strict)
     if refs:
         return refs, "llm"
     return extract_refs_regex(text), "regex"
+
+
+def parse_citation(citation: str, strict: bool = False) -> tuple[dict, str]:
+    """Parse one citation string into fields; returns (ref, method).
+
+    Uses the LLM when configured, otherwise the regex parser (title only).
+    If the LLM splits the string into several entries, the first is kept.
+    """
+    refs = extract_refs_llm(citation, strict=strict)
+    method = "llm"
+    if not refs:
+        refs = extract_refs_regex("References\n[1] " + citation)
+        method = "regex"
+    ref = refs[0] if refs else _empty_ref(citation[:300], citation)
+    ref = dict(ref, raw=citation)
+    return ref, method
 
 
 # ---------------------------------------------------------------------------
@@ -409,12 +440,25 @@ def extract_references(text: str) -> tuple[list[dict], str]:
 # ---------------------------------------------------------------------------
 
 
+def _throttle() -> None:
+    """Keep at least ``SS_MIN_INTERVAL`` s between calls (all threads)."""
+    with _SS_LOCK:
+        wait = _SS_LAST[0] + SS_MIN_INTERVAL - time.monotonic()
+        if wait > 0:
+            time.sleep(wait)
+        _SS_LAST[0] = time.monotonic()
+
+
 def search_semantic_scholar(
-    query: str, api_key: str = "", top_k: int = 5
+    query: str, api_key: str = "", top_k: int = 5, strict: bool = False
 ) -> tuple[list, int]:
-    """Top-k Semantic Scholar candidates for ``query`` (cached, retried)."""
-    if query in _CACHE:
-        return _CACHE[query]
+    """Top-k Semantic Scholar candidates for ``query`` (cached, retried).
+
+    With ``strict=True``, an auth error or a request that still fails after
+    the retries raises :class:`APIError` instead of returning no candidates.
+    """
+    if (query, top_k) in _CACHE:
+        return _CACHE[(query, top_k)]
     key = api_key or SS_API_KEY
     headers = {"x-api-key": key} if key else {}
     params = {
@@ -422,25 +466,39 @@ def search_semantic_scholar(
         "limit": top_k,
         "fields": "title,year,authors,venue,journal,externalIds",
     }
+    last = "no response"
     for attempt in range(3):
         try:
+            _throttle()
             resp = httpx.get(
                 SS_SEARCH_URL, params=params, headers=headers, timeout=30.0
             )
             if resp.status_code == 429:
+                last = "HTTP 429 (rate limited)"
                 time.sleep(10 * (attempt + 1))
                 continue
             if resp.status_code != 200:
-                log.warning("Semantic Scholar HTTP %s", resp.status_code)
+                last = f"HTTP {resp.status_code}"
+                log.warning("Semantic Scholar %s", last)
+                if strict and resp.status_code in (401, 403):
+                    raise APIError(f"Semantic Scholar: {last}")
+                if strict and resp.status_code >= 500:
+                    time.sleep(5)
+                    continue
                 return [], 0
             data = resp.json()
-            papers = data.get("data", [])
-            _CACHE[query] = (papers, data.get("total", len(papers)))
-            return _CACHE[query]
+            papers = data.get("data", []) or []
+            _CACHE[(query, top_k)] = (papers, data.get("total", len(papers)))
+            return _CACHE[(query, top_k)]
+        except APIError:
+            raise
         except Exception as e:
-            log.warning("Semantic Scholar request failed: %s", e)
+            last = f"{type(e).__name__}: {e}"
+            log.warning("Semantic Scholar request failed: %s", last)
             if attempt < 2:
                 time.sleep(5)
+    if strict:
+        raise APIError(f"Semantic Scholar: {last}")
     return [], 0
 
 
@@ -467,6 +525,7 @@ def verify_reference(
     author_veto: bool = False,
     papers: list | None = None,
     scoring: str = DEFAULT_SCORING,
+    strict: bool = False,
 ) -> dict:
     """Score one structured reference against Semantic Scholar.
 
@@ -486,6 +545,8 @@ def verify_reference(
         Pre-fetched candidates (Semantic Scholar JSON); skips the API call.
     scoring : {"v2", "v1"}
         Scoring-rule version (see ``SCORING_VERSIONS``). Default "v2".
+    strict : bool
+        Raise :class:`APIError` on a failed search instead of scoring 0.
     """
     if scoring not in SCORING_VERSIONS:
         raise ValueError(f"scoring must be one of {SCORING_VERSIONS}")
@@ -494,7 +555,7 @@ def verify_reference(
     query = clean_query(target)
     if papers is None:
         papers, total = search_semantic_scholar(
-            query, api_key=ss_key, top_k=top_k
+            query, api_key=ss_key, top_k=top_k, strict=strict
         )
     else:
         total = len(papers)
@@ -624,6 +685,7 @@ def main(argv=None):
     ap.add_argument("--scoring", choices=SCORING_VERSIONS, default="v2")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(message)s")
+    logging.getLogger("httpx").setLevel(logging.WARNING)
 
     if not args.input:
         text = SAMPLE_TEXT
