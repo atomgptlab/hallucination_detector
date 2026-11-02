@@ -1,5 +1,5 @@
 {
-  "description": "Balanced 300-citation subset (150 real, 150 fake) of the CiteAudit benchmark (Yuan et al. 2026, https://github.com/shiiiikw/CiteAudit). GT=true: real citation. source_type as in CiteAudit.",
+  "description": "Balanced 300-citation subset (150 real, 150 fake) of the CiteAudit benchmark (Shi et al. 2026, https://github.com/shiiiikw/CiteAudit). GT=true: real citation. source_type as in CiteAudit.",
   "data": [
     {
       "source_type": "generated",
