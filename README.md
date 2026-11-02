@@ -141,7 +141,7 @@ is read as is.
 
 | Dataset | n | Real / fake | Source |
 |---|---:|---|---|
-| `neurips2025_hallucinated.json` | 100 | 0 / 100 | Confirmed hallucinated citations in accepted NeurIPS 2025 papers ([GPTZero audit](https://gptzero.me/news/neurips/)) |
+| `neurips2025_hallucinated.json` | 100 | 0 / 100 | Confirmed hallucinated citations in accepted NeurIPS 2025 papers ([GPTZero audit](https://gptzero.me/news/neurips/)), verbatim as submitted |
 | `citeaudit_300.json` | 300 | 150 / 150 | Balanced 300-citation sample of the [CiteAudit](https://github.com/shiiiikw/CiteAudit) benchmark (91 real-world, 209 generated) |
 | `materials_pilot.json` | 26 | 26 / 0 | Genuine materials references in five types: articles, database papers, software, crystallographic databases, bare data entries |
 

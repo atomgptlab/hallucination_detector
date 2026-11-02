@@ -1,504 +1,504 @@
 {
-  "description": "100 confirmed hallucinated citations from accepted NeurIPS 2025 papers (GPTZero NeurIPS 2025 hallucination report). Citation strings are as parsed by the tool (authors. title. venue. year.). GT=false: all fabricated.",
+  "description": "100 confirmed hallucinated citations from accepted NeurIPS 2025 papers (GPTZero NeurIPS 2025 hallucination report), as submitted to the tool. GT=false: all fabricated.",
   "data": [
     {
       "source_type": "neurips2025",
-      "citation": "John Doe, Jane Smith. Webvoyager: Building an end-to-end web agent with large multimodal models. 2024.",
+      "citation": "John Doe and Jane Smith. Webvoyager: Building an end-to-end web agent with large multimodal models. arXiv preprint arXiv:2401.00001, 2024.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "John Smith, Jane Doe. Deep learning techniques for avatar-based interaction in virtual environments. IEEE Transactions on Neural Networks and Learning Systems. 2021.",
+      "citation": "John Smith and Jane Doe. Deep learning techniques for avatar-based interaction in virtual environments. IEEE Transactions on Neural Networks and Learning Systems, 32(12):5600-5612, 2021. doi: 10.1109/ TNNLS.2021.3071234. URL https://ieeexplore.ieee.org/document/307123",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Min-Jun Lee, Soo-Young Kim. Generative adversarial networks for hyper-realistic avatar creation. 2022.",
+      "citation": "Min-Jun Lee and Soo-Young Kim. Generative adversarial networks for hyper-realistic avatar creation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pages 1234-1243, 2022. doi: 10.1109/CVPR.2022.001234. URL https://ieeexplore.ieee.org/ document/00123",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Firstname Lastname, Others. Drivlme: A large-scale multi-agent driving benchmark. 2023.",
+      "citation": "Firstname Lastname and Others. Drivlme: A large-scale multi-agent driving benchmark, 2023. URL or arXiv ID to be updated.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Firstname Lastname, Others. Robotslang: Grounded natural language for multi-robot object search. 2024.",
+      "citation": "Firstname Lastname and Others. Robotslang: Grounded natural language for multi-robot object search, 2024. To appear.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Nuo Lou, et al.. Dsp: Diffusion-based span prediction for masked text modeling. 2023.",
+      "citation": "Nuo Lou and et al. Dsp: Diffusion-based span prediction for masked text modeling. arXiv preprint arXiv:2305.XXXX, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "A. Sahoo, et al.. inatk: Iterative noise aware text denoising. 2024.",
+      "citation": "A. Sahoo and et al. inatk: Iterative noise aware text denoising. arXiv preprint arXiv:2402.XXXX, 2024.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Sheng Shi, et al.. Maskgpt: Uniform denoising diffusion for language. 2024.",
+      "citation": "Sheng Shi and et al. Maskgpt: Uniform denoising diffusion for language. arXiv preprint arXiv:2401.XXXX, 2024.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Asma Issa, George Mohler, John Johnson. Paraphrase identification using deep contextualized representations. 2018.",
+      "citation": "Asma Issa, George Mohler, and John Johnson. Paraphrase identification using deep contextualized representations. In Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing (EMNLP), pp. 517-526, 2018.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Yi Tay, Kelvin Fu, Kai Wu, Ivan Casanueva, Jianfeng Liu, Byron Wallace, Shuohang Wang, Bajrang Singh, Julian McAuley. Reasoning with heterogeneous graph representations for knowledge-aware question answering. 2021.",
+      "citation": "Yi Tay, Kelvin Fu, Kai Wu, Ivan Casanueva, Jianfeng Liu, Byron Wallace, Shuohang Wang, Bajrang Singh, and Julian McAuley. Reasoning with heterogeneous graph representations for knowledge-aware question answering. In Findings of the Association for Computational Linguistics: ACL 2021, pp. 3497-3506, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Alex Wang, Rishi Bommasani, Dan Hendrycks, Daniel Song, Zhilin Zhang. Efficient fewshot learning with efl: A single transformer for all tasks. 2021.",
+      "citation": "Alex Wang, Rishi Bommasani, Dan Hendrycks, Daniel Song, and Zhilin Zhang. Efficient fewshot learning with efl: A single transformer for all tasks. In arXiv preprint arXiv:2107.13586, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Lei Yu, Jimmy Dumsmyr, Kevin Knight. Deep paraphrase identification. 2014.",
+      "citation": "Lei Yu, Jimmy Dumsmyr, and Kevin Knight. Deep paraphrase identification. In Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP), pp. $650-655,2014$.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "X. Ou, et al.. Tuqdm: Token unmasking with quantized diffusion models. 2024.",
+      "citation": "X. Ou and et al. Tuqdm: Token unmasking with quantized diffusion models. In ACL, 2024.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Franz Aichberger, Lily Chen, John Smith. Semantically diverse language generation. 2025.",
+      "citation": "Franz Aichberger, Lily Chen, and John Smith. Semantically diverse language generation. In International Conference on Learning Representations (ICLR), 2025.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Maria Glushkova, Shiori Kobayashi, Junichi Suzuki. Uncertainty estimation in neural text regression. 2021.",
+      "citation": "Maria Glushkova, Shiori Kobayashi, and Junichi Suzuki. Uncertainty estimation in neural text regression. In Findings of the Association for Computational Linguistics: EMNLP 2021, pp. $4567-4576,2021$.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Yichao Wang, Bowen Zhou, Adam Lopez, Benjamin Snyder. Uncertainty quantification in abstractive summarization. 2022.",
+      "citation": "Yichao Wang, Bowen Zhou, Adam Lopez, and Benjamin Snyder. Uncertainty quantification in abstractive summarization. In Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (ACL), pp. 1234-1245, 2022.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Mohit Jain, Ethan Perez, James Glass. Learning to predict confidence for language models. 2021.",
+      "citation": "Mohit Jain, Ethan Perez, and James Glass. Learning to predict confidence for language models. In Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP), pp. 245-256, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Srinivasan Kadavath, Urvashi Khandelwal, Alec Radford, Noam Shazeer. Answer me this: Self-verifying large language models. 2022.",
+      "citation": "Srinivasan Kadavath, Urvashi Khandelwal, Alec Radford, and Noam Shazeer. Answer me this: Self-verifying large language models. In arXiv preprint arXiv:2205.05407, 2022.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Zayne Sprague, Xi Ye, Kyle Richardson, Greg Durrett. MuSR: Testing the limits of chain-of-thought with multistep soft reasoning. EMNLP. 2023.",
+      "citation": "Zayne Sprague, Xi Ye, Kyle Richardson, and Greg Durrett. MuSR: Testing the limits of chain-of-thought with multistep soft reasoning. In EMNLP, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Mario Paolone, Trevor Gaunt, Xavier Guillaud, Marco Liserre, Sakis Meliopoulos, Antonello Monti, Thierry Van Cutsem, Vijay Vittal, Costas Vournas. A benchmark model for power system stability controls. IEEE Transactions on Power Systems. 2020.",
+      "citation": "Mario Paolone, Trevor Gaunt, Xavier Guillaud, Marco Liserre, Sakis Meliopoulos, Antonello Monti, Thierry Van Cutsem, Vijay Vittal, and Costas Vournas. A benchmark model for power system stability controls. IEEE Transactions on Power Systems, 35(5):3627-3635, 2020.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Mingliang Han, Bingni W Wei, Phelan Senatus, Jörg D Winkel, Mason Youngblood, I-Han Lee, David J Mandell. Deep koopman operator: A model-free approach to nonlinear dynamical systems. Chaos: An Interdisciplinary Journal of Nonlinear Science. 2020.",
+      "citation": "Mingliang Han, Bingni W Wei, Phelan Senatus, Jörg D Winkel, Mason Youngblood, I-Han Lee, and David J Mandell. Deep koopman operator: A model-free approach to nonlinear dynamical systems. Chaos: An Interdisciplinary Journal of Nonlinear Science, 30(12):123135, 2020.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Francisco Ramalho, Meng Liu, Zihan Liu, Etienne Mathieu. Towards gflownets for continuous control. 2023.",
+      "citation": "Francisco Ramalho, Meng Liu, Zihan Liu, and Etienne Mathieu. Towards gflownets for continuous control. arXiv preprint arXiv:2310.18664, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Arjun Gupta, Xi Victoria Lin, Chunyuan Zhang, Michel Galley, Jianfeng Gao, Carlos Guestrin Ferrer. Robust compositional visual reasoning via language-guided neural module networks. Advances in Neural Information Processing Systems (NeurIPS). 2021.",
+      "citation": "Arjun Gupta, Xi Victoria Lin, Chunyuan Zhang, Michel Galley, Jianfeng Gao, and Carlos Guestrin Ferrer. Robust compositional visual reasoning via language-guided neural module networks. In Advances in Neural Information Processing Systems (NeurIPS), 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Diederik P. Kingma, Jimmy Ba. Deepfm: a factorization-machine based neural network for ctr prediction. International Conference on Learning Representations. 2015.",
+      "citation": "Diederik P. Kingma and Jimmy Ba. Deepfm: a factorization-machine based neural network for ctr prediction. In International Conference on Learning Representations, 2015.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Weijia Xu, Xing Niu, Marine Carpuat. Controlling toxicity in neural machine translation. Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP). 2020.",
+      "citation": "Weijia Xu, Xing Niu, and Marine Carpuat. Controlling toxicity in neural machine translation. In Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP), pages 4245-4256, 2020.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Xiang Zhang, Xuehai Wei, Xian Zhang, Xue Zhang. Adversarial attacks and defenses in toxicity detection: A survey. Proceedings of the 2020 International Joint Conference on Neural Networks (IJCNN). 2020.",
+      "citation": "Xiang Zhang, Xuehai Wei, Xian Zhang, and Xue Zhang. Adversarial attacks and defenses in toxicity detection: A survey. In Proceedings of the 2020 International Joint Conference on Neural Networks (IJCNN), pages 1-8. IEEE, 2020.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Fenglin Ding, Debesh Jha, Maria Härgestam, Pål Halvorsen, Michael A Riegler, Dag Johansen, Ronny Hänsch, Håvard Stensland. Vits: Vision transformer for video self-supervised pretraining of surgical phase recognition. International Conference on Medical Image Computing and Computer-Assisted Intervention. 2022.",
+      "citation": "Fenglin Ding, Debesh Jha, Maria Härgestam, Pål Halvorsen, Michael A Riegler, Dag Johansen, Ronny Hänsch, and Håvard Stensland. Vits: Vision transformer for video self-supervised pretraining of surgical phase recognition. In International Conference on Medical Image Computing and Computer-Assisted Intervention, pages 293-302. Springer, 2022.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Humberto Acevedo-Viloria, Juan Martinez, Maria Garcia. Relational graph convolutional networks for financial fraud detection. IEEE Transactions on Knowledge and Data Engineering. 2021.",
+      "citation": "Humberto Acevedo-Viloria, Juan Martinez, and Maria Garcia. Relational graph convolutional networks for financial fraud detection. IEEE Transactions on Knowledge and Data Engineering, 33(7):1357-1370, 2021. doi: 10.1109/TKDE.2020.3007655.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Majid Zolghadr, Mohsen Jamali, Jiawei Zhang. Diffurecsys: Diffusion-based generative modeling for sequential recommendation. Proceedings of the ACM Web Conference (WWW). 2024.",
+      "citation": "Majid Zolghadr, Mohsen Jamali, and Jiawei Zhang. Diffurecsys: Diffusion-based generative modeling for sequential recommendation. Proceedings of the ACM Web Conference (WWW), pages 2156-2165, 2024. doi: 10.1145/3545678.3557899.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Bernd Kerbl, Thomas Müller, Paolo Favaro. Efficient 3d gaussian splatting for real-time neural rendering. CVPR. 2022.",
+      "citation": "Bernd Kerbl, Thomas Müller, and Paolo Favaro. Efficient 3d gaussian splatting for real-time neural rendering. In CVPR, 2022. 2, 3",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Punchana Khungurn, Edward H. Adelson, Julie Dorsey, Holly Rushmeier. Matching real-world material appearance. TPAMI. 2015.",
+      "citation": "Punchana Khungurn, Edward H. Adelson, Julie Dorsey, and Holly Rushmeier. Matching real-world material appearance. TPAMI, 2015. 6",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Ashish Kumar, Logan Engstrom, Andrew Ilyas, Dimitris Tsipras. Understanding self-training for gradient-boosted trees. Advances in Neural Information Processing Systems (NeurIPS). 2020.",
+      "citation": "Ashish Kumar, Logan Engstrom, Andrew Ilyas, and Dimitris Tsipras. Understanding self-training for gradient-boosted trees. In Advances in Neural Information Processing Systems (NeurIPS), volume 33, pp. 1651-1662, 2020.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Chuang Fan, Shipeng Liu, Seyed Motamed, Shiyu Zhong, Silvio Savarese, Juan Carlos Niebles, Anima Anandkumar, Adrien Gaidon, Stefan Scherer. Expectation maximization pseudo labels. 2023.",
+      "citation": "Chuang Fan, Shipeng Liu, Seyed Motamed, Shiyu Zhong, Silvio Savarese, Juan Carlos Niebles, Anima Anandkumar, Adrien Gaidon, and Stefan Scherer. Expectation maximization pseudo labels. arXiv preprint arXiv:2305.01747, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "T. Qiao, W. Liu, Z. Xie, H. Xu, J. Lin, J. Huang, Y. Yang. Clip-score: A robust scoring metric for text-to-image generation. 2022.",
+      "citation": "T. Qiao, W. Liu, Z. Xie, H. Xu, J. Lin, J. Huang, and Y. Yang, \"Clip-score: A robust scoring metric for text-to-image generation,\" arXiv preprint arXiv:2201.07519, 2022.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Yunwen Lei, Puyu Wang, Yiming Ying, Ding-Xuan Zhou. Optimization and generalization of gradient descent for shallow relu networks with minimal width. 2024.",
+      "citation": "Yunwen Lei, Puyu Wang, Yiming Ying, and Ding-Xuan Zhou. Optimization and generalization of gradient descent for shallow relu networks with minimal width. preprint, 2024.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Uher, R., Goodman, R., Moutoussis, M., Brammer, M., Williams, S.C.R., Dolan, R.J.. Cognitive and neural predictors of response to cognitive behavioral therapy for depression: a review of the evidence. Journal of Affective Disorders. 2014.",
+      "citation": "Uher, R., Goodman, R., Moutoussis, M., Brammer, M., Williams, S.C.R., Dolan, R.J.: Cognitive and neural predictors of response to cognitive behavioral therapy for depression: a review of the evidence. Journal of Affective Disorders 169, 94-104 (2014)",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Junyeong Lee, Yiseong Kim, Seungju Park, Hyunjik Lee. Softmatch: Addressing the quantity-quality trade-off in semi-supervised learning. 2023.",
+      "citation": "Junyeong Lee, Yiseong Kim, Seungju Park, and Hyunjik Lee. Softmatch: Addressing the quantity-quality trade-off in semi-supervised learning. In Advances in Neural Information Processing Systems (NeurIPS), volume 36, pages 18315-18327, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Z. Zhu, T. Yu, X. Zhang, J. Li, Y. Zhang, Y. Fu. Neuralrgb-d: Neural representations for depth estimation and scene mapping. 2022.",
+      "citation": "Z. Zhu, T. Yu, X. Zhang, J. Li, Y. Zhang, and Y. Fu. Neuralrgb-d: Neural representations for depth estimation and scene mapping. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2022.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Y. Zhang, M. Oswald, D. Cremers. Airslam: Illumination-invariant hybrid slam. 2023.",
+      "citation": "Y. Zhang, M. Oswald, and D. Cremers. Airslam: Illumination-invariant hybrid slam. In International Conference on Computer Vision (ICCV), pages 2345-2354, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Yihong Zhu, Junxian Li, Xianfeng Han, Shirui Pan, Liang Yao, Chengqi Wang. Spectral contrastive graph clustering. 2022.",
+      "citation": "Yihong Zhu, Junxian Li, Xianfeng Han, Shirui Pan, Liang Yao, and Chengqi Wang. Spectral contrastive graph clustering. In International Conference on Learning Representations, 2022.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Ming Zhong, Han Liu, Weizhu Zhang, Houyu Wang, Xiang Li, Maosong Sun, Xu Han. Hyperbolic and spherical embeddings for long-tail entities. 2021.",
+      "citation": "Ming Zhong, Han Liu, Weizhu Zhang, Houyu Wang, Xiang Li, Maosong Sun, and Xu Han. Hyperbolic and spherical embeddings for long-tail entities. In ACL, pages 5491-5501, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Ye Gao, Robert Tardif, Jiale Cao, Tapio Schneider. Artificial intelligence reconstructs missing climate information. Nature Geoscience. 2024.",
+      "citation": "Ye Gao, Robert Tardif, Jiale Cao, and Tapio Schneider. Artificial intelligence reconstructs missing climate information. Nature Geoscience, 17:158-164, 2024. doi: 10.1038/s41561-023-01297-2.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Étienne Pardoux, Alexander Yu Veretennikov. Poisson equation for multiscale diffusions. Journal of Mathematical Sciences. 2002.",
+      "citation": "Étienne Pardoux and Alexander Yu Veretennikov. Poisson equation for multiscale diffusions. Journal of Mathematical Sciences, 111(3):3713-3719, 2002.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Charanpal D Mummadi, Matthias Arens, Thomas Brox. Test-time adaptation for continual semantic segmentation. 2021.",
+      "citation": "Charanpal D Mummadi, Matthias Arens, and Thomas Brox. Test-time adaptation for continual semantic segmentation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pages 11828-11837, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Jiacheng He, Zhilu Zhang, Zhen Wang, Yan Huang. Autoencoder based test-time adaptation for semantic segmentation. 2021.",
+      "citation": "Jiacheng He, Zhilu Zhang, Zhen Wang, and Yan Huang. Autoencoder based test-time adaptation for semantic segmentation. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), pages 998-1007, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "M. Gong, F. Yu, J. Zhang, D. Tao. Efficient ℓp norm regularization for learning sparsity in deep neural networks. IEEE Transactions on Neural Networks and Learning Systems. 2022.",
+      "citation": "M. Gong, F. Yu, J. Zhang, and D. Tao. Efficient $\\ell_{p}$ norm regularization for learning sparsity in deep neural networks. IEEE Transactions on Neural Networks and Learning Systems, 33(10): $5381-5392,2022",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Mihail Stoian, Richard Milbradt, Christian Mendl. NP-Hardness of Optimal TensorNetwork Contraction and Polynomial-Time Algorithms for Tree Tensor Networks. Quantum. 2022.",
+      "citation": "Mihail Stoian, Richard Milbradt, and Christian Mendl. NP-Hardness of Optimal TensorNetwork Contraction and Polynomial-Time Algorithms for Tree Tensor Networks. Quantum, 6:e119, 2022.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Jianyu Xu, Wei Li, Ming Zhao. Complexity of Optimal Tensor Network Contraction Sequences. Journal of Computational Physics. 2023.",
+      "citation": "Jianyu Xu, Wei Li, and Ming Zhao. Complexity of Optimal Tensor Network Contraction Sequences. Journal of Computational Physics, 480:112237, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Patrick Esser, Robin Rombach, Björn Ommer. Structure-aware video generation with latent diffusion models. 2023.",
+      "citation": "Patrick Esser, Robin Rombach, and Björn Ommer. Structure-aware video generation with latent diffusion models. arXiv preprint arXiv:2303.07332, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Lele Xu, Chen Lin, Hongyu Zhao, et al.. Gaborvit: Global attention with local frequency awareness. 2022.",
+      "citation": "Lele Xu, Chen Lin, Hongyu Zhao, and et al. Gaborvit: Global attention with local frequency awareness. In European Conference on Computer Vision (ECCV), 2022.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Yoonwoo Lee, Jaehyeong Kang, Namil Kim, Jinwoo Shin, Honglak Lee. Structured fast fourier transform attention for vision transformers. 2022.",
+      "citation": "Yoonwoo Lee, Jaehyeong Kang, Namil Kim, Jinwoo Shin, and Honglak Lee. Structured fast fourier transform attention for vision transformers. In Advances in Neural Information Processing Systems (NeurIPS), 2022.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Siyuan Gong, Alan Yu, Xiaohan Chen, Yinpeng Lin, Larry S Davis. Vision transformer compression: Early exiting and token pruning. 2021.",
+      "citation": "Siyuan Gong, Alan Yu, Xiaohan Chen, Yinpeng Lin, and Larry S Davis. Vision transformer compression: Early exiting and token pruning. In Advances in Neural Information Processing Systems (NeurIPS), 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Jiuxiang Shi, Zuxuan Wu, Dahua Lin. Token-aware adaptive sampling for efficient diffusion models. 2023.",
+      "citation": "Jiuxiang Shi, Zuxuan Wu, and Dahua Lin. Token-aware adaptive sampling for efficient diffusion models. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Raphael Muller, Simon Kornblith, Geoffrey Hinton. Adavit: Adaptive tokens for efficient vision transformer. 2021.",
+      "citation": "Raphael Muller, Simon Kornblith, and Geoffrey Hinton. Adavit: Adaptive tokens for efficient vision transformer. In Proceedings of the International Conference on Machine Learning (ICML), 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Xin Wang, Anlin Chen, Lihui Xie, Xin Jin, Cheng Wang, Ping Luo. Not all tokens are equal: Efficient transformer for tokenization and beyond. 2021.",
+      "citation": "Xin Wang, Anlin Chen, Lihui Xie, Xin Jin, Cheng Wang, and Ping Luo. Not all tokens are equal: Efficient transformer for tokenization and beyond. In Advances in Neural Information Processing Systems (NeurIPS), 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Z. Chen, N. Flammarion. When and why sam generalizes better: An optimization perspective. 2022.",
+      "citation": "Z. Chen and N. Flammarion. When and why sam generalizes better: An optimization perspective. arXiv preprint arXiv:2206.09267, 2022.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "K. A. Sankararaman, S. Sankararaman, H. Pandey, S. Ganguli, F. Bromberg. The impact of neural network overparameterization on gradient confusion and stochastic gradient descent. 2020.",
+      "citation": "K. A. Sankararaman, S. Sankararaman, H. Pandey, S. Ganguli, and F. Bromberg. The impact of neural network overparameterization on gradient confusion and stochastic gradient descent. In 37th International Conference on Machine Learning (ICML), pages 8469-8479, 2020.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Why Physically-Based Rendering. Procedia IUTAM. 2015.",
+      "citation": "Why Physically-Based Rendering. Physically-based rendering. Procedia IUTAM, 13(127137):3, 2015 .",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Pierre Casgrain, Anirudh Kulkarni, Nicholas Watters. Learning to trade with continuous action spaces: Application to market making. 2023.",
+      "citation": "Pierre Casgrain, Anirudh Kulkarni, and Nicholas Watters. Learning to trade with continuous action spaces: Application to market making. arXiv preprint arXiv:2303.08603, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Z Ning, Y K Kwok. Q-learning for option pricing and hedging with transaction costs. Applied Economics. 2020.",
+      "citation": "Z Ning and Y K Kwok. Q-learning for option pricing and hedging with transaction costs. Applied Economics, 52(55):6033-6048, 2020.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "W L Chan, R O Shelton. Can machine learning improve delta hedging?. Journal of Derivatives. 2001.",
+      "citation": "W L Chan and R O Shelton. Can machine learning improve delta hedging? Journal of Derivatives, $9(1): 39-56,2001$.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Petter N Kolm, Sebastian Krügel, Sergiy V Zadorozhnyi. Reinforcement learning for optimal hedging. The Journal of Trading. 2019.",
+      "citation": "Petter N Kolm, Sebastian Krügel, and Sergiy V Zadorozhnyi. Reinforcement learning for optimal hedging. The Journal of Trading, 14(4):4-17, 2019.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Kyung Hyun Park, Hyeong Jin Kim, Woo Chang Kim. Deep reinforcement learning for limit order book-based market making. Expert Systems with Applications. 2021.",
+      "citation": "Kyung Hyun Park, Hyeong Jin Kim, and Woo Chang Kim. Deep reinforcement learning for limit order book-based market making. Expert Systems with Applications, 169:114338, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Moonseop Han, Elizabeth Qian. Robust prediction of dynamical systems with structured neural networks: Long-term behavior and chaos. Physica D: Nonlinear Phenomena. 2021.",
+      "citation": "Moonseop Han and Elizabeth Qian. Robust prediction of dynamical systems with structured neural networks: Long-term behavior and chaos. Physica D: Nonlinear Phenomena, 427:133006, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Bart De Schutter, Serge P Hoogendoorn. Modeling and control of freeway traffic flow by state space neural networks. Neural Computing and Applications. 2008.",
+      "citation": "Bart De Schutter and Serge P Hoogendoorn. Modeling and control of freeway traffic flow by state space neural networks. Neural Computing and Applications, 17(2):175-185, 2008.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Jaideep Pathak, Brian R Hunt, Georg M Goerg, Themistoklis P Sapsis. Data-driven prediction of chaotic dynamics: Methods, challenges, and opportunities. Annual Review of Condensed Matter Physics. 2023.",
+      "citation": "Jaideep Pathak, Brian R Hunt, Georg M Goerg, and Themistoklis P Sapsis. Data-driven prediction of chaotic dynamics: Methods, challenges, and opportunities. Annual Review of Condensed Matter Physics, 14:379-401, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Alejandro Güemes, Stefano Discetti, Andrea Ianiro. Coarse-grained physics-based prediction of three-dimensional unsteady flows via neural networks. Science Advances. 2021.",
+      "citation": "Alejandro Güemes, Stefano Discetti, and Andrea Ianiro. Coarse-grained physics-based prediction of three-dimensional unsteady flows via neural networks. Science Advances, 7(46):eabj0751, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Jeongseung Park, Minseon Yang, Minz Won Park, Geonseok Lee. Diffsound: Differential sound manipulation with a few-shot supervision. 2021.",
+      "citation": "Jeongseung Park, Minseon Yang, Minz Won Park, and Geonseok Lee. Diffsound: Differential sound manipulation with a few-shot supervision. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops, pages 1767-1775, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Wenxuan Sun, Tri Dao, Hongyu Zhuang, Zihang Dai, Albert Gu, Christopher D Manning. Llamba: Efficient llms with mamba-based distillation. 2024.",
+      "citation": "Wenxuan Sun, Tri Dao, Hongyu Zhuang, Zihang Dai, Albert Gu, and Christopher D Manning. Llamba: Efficient llms with mamba-based distillation. arXiv preprint arXiv:2502.14458, 2024.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Tri Dao, Shizhe Ma, Wenxuan Sun, Albert Gu, Sam Smith, Aapo Kyrola, Christopher D Manning, Christopher Re. An empirical study of state space models for large language modeling. 2024.",
+      "citation": "Tri Dao, Shizhe Ma, Wenxuan Sun, Albert Gu, Sam Smith, Aapo Kyrola, Christopher D Manning, and Christopher Re. An empirical study of state space models for large language modeling. arXiv preprint arXiv:2406.07887, 2024.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Junyan Zhu, Chenyang Li, Chao He, et al.. Freematch: A simple framework for long-tailed semi-supervised learning. 2021.",
+      "citation": "Junyan Zhu, Chenyang Li, Chao He, and et al. Freematch: A simple framework for long-tailed semi-supervised learning. In NeurIPS, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Yijie Zang, et al.. Fedclip: A federated learning framework for vision-language models. 2023.",
+      "citation": "Yijie Zang et al. Fedclip: A federated learning framework for vision-language models. In NeurIPS, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Jiahui Liu, et al.. Tall-swin: Thumbnail layout transformer for generalised deepfake video detection. ICCV. 2023.",
+      "citation": "Jiahui Liu and et al. Tall-swin: Thumbnail layout transformer for generalised deepfake video detection. In ICCV, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Nitish Srivastava, Ruslan R Salakhutdinov. Discriminative features for fast frame-based phoneme classification. Neural networks. 2013.",
+      "citation": "Nitish Srivastava and Ruslan R Salakhutdinov. Discriminative features for fast frame-based phoneme classification. Neural networks, 47:17-23, 2013.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Anh Tuan Nguyen, Shengping Li, Chao Qin. Multimodal adversarial robustness: Attack and defense. IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI). 2021.",
+      "citation": "Anh Tuan Nguyen, Shengping Li, and Chao Qin. Multimodal adversarial robustness: Attack and defense. IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI), 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Jack Lau, Ankan Gayen, Philipp Tschandl, Gregory A Burns, Jiahong Yuan, Tanveer SyedaMahmood, Mehdi Moradi. A dataset and exploration of models for understanding radiology images through dialogue. Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP). 2018.",
+      "citation": "Jack Lau, Ankan Gayen, Philipp Tschandl, Gregory A Burns, Jiahong Yuan, Tanveer SyedaMahmood, and Mehdi Moradi. A dataset and exploration of models for understanding radiology images through dialogue. In Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP), pages 2575-2584, 2018.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Yikai Zhang, et al.. \"Text-to-Image Diffusion Models with Customized Guidance\". Proceedings of the IEEE/CVF International Conference on Computer Vision. 2023.",
+      "citation": "Yikai Zhang et al. \"Text-to-Image Diffusion Models with Customized Guidance\". In: Proceedings of the IEEE/CVF International Conference on Computer Vision. 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Author Song, AnotherAuthor Zhang. \"Consistency in Diffusion Models: Improving Noise Embeddings\". IEEE Transactions on Pattern Analysis and Machine Intelligence. 2023.",
+      "citation": "Author Song and AnotherAuthor Zhang. \"Consistency in Diffusion Models: Improving Noise Embeddings\". In: IEEE Transactions on Pattern Analysis and Machine Intelligence (2023). URL: https://arxiv.org/abs/2304.08787.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Claudia Goldin. Occupational choices and the gender wage gap. American Economic Review. 2014.",
+      "citation": "Claudia Goldin. Occupational choices and the gender wage gap. American Economic Review, 104(5):348-353, 2014.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Olah, C., Elhage, N., Nanda, N., Schiefer, N., Jones, A., Henighan, T., DasSarma, N.. Transformer circuits. Distill. 2022.",
+      "citation": "Olah, C., Elhage, N., Nanda, N., Schiefer, N., Jones, A., Henighan, T., and DasSarma, N. (2022). Transformer circuits. Distill, 7(3). https://distill.pub/2022/circuits/.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Nanda, N.. Progress in mechanistic interpretability: Reverse-engineering induction heads in GPT-2. 2023.",
+      "citation": "Nanda, N. (2023). Progress in mechanistic interpretability: Reverse-engineering induction heads in GPT-2.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "J. Zhang, X. Li. Multi-agent systems for distributed problem solving: A framework for task decomposition and coordination. Procedia Computer Science. 2015.",
+      "citation": "J. Zhang and X. Li. Multi-agent systems for distributed problem solving: A framework for task decomposition and coordination. Procedia Computer Science, 55:1131-1138, 2015.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Erfan Aghasian, Shai Avidan, Piotr Dollar, Justin Johnson. Hierarchical protocols for multi-agent 3d scene understanding. CVPR. 2021.",
+      "citation": "Erfan Aghasian, Shai Avidan, Piotr Dollar, and Justin Johnson. Hierarchical protocols for multi-agent 3d scene understanding. In CVPR, pages 7664-7673, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Itay Hubara, Matthieu Courbariaux, Daniel Soudry, Rami El-Yaniv, Yoshua Bengio. Quantizing deep convolutional networks for efficient inference: A whitepaper. arXiv preprint arXiv:1612.01462. 2017.",
+      "citation": "Itay Hubara, Matthieu Courbariaux, Daniel Soudry, Rami El-Yaniv, and Yoshua Bengio. Quantizing deep convolutional networks for efficient inference: A whitepaper. arXiv preprint arXiv:1612.01462, 2017.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Zhiqiang Wang, Chao Zhang, Bing Li, Zhen Xu, Zhiwei Li. A survey of model compression and acceleration for deep neural networks. ACM Computing Surveys. 2021.",
+      "citation": "Zhiqiang Wang, Chao Zhang, Bing Li, Zhen Xu, and Zhiwei Li. A survey of model compression and acceleration for deep neural networks. ACM Computing Surveys, 54(7):1-34, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Andrew Black, et al.. Zero-shot skill composition with semantic feature fusion. arXiv preprint arXiv:2310.08573. 2023.",
+      "citation": "Andrew Black et al. Zero-shot skill composition with semantic feature fusion. arXiv preprint arXiv:2310.08573, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Yufei Wu, Kiran Alwala, Vivek Ganapathi, Sudeep Sharma, Yilun Chang, Yicheng Zhang, Yilun Zhou, et al.. Susie: Scaling up instruction-following policies for robot manipulation. arXiv preprint arXiv:2402.17552. 2024.",
+      "citation": "Yufei Wu, Kiran Alwala, Vivek Ganapathi, Sudeep Sharma, Yilun Chang, Yicheng Zhang, Yilun Zhou, et al. Susie: Scaling up instruction-following policies for robot manipulation. arXiv preprint arXiv:2402.17552, 2024.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Zhipeng Zhang, Chang Liu, Shihan Wu, Yan Zhao. EST: Event spatio-temporal transformer for object recognition with event cameras. ICASSP 2023 - 2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP). 2023.",
+      "citation": "Zhipeng Zhang, Chang Liu, Shihan Wu, and Yan Zhao. EST: Event spatio-temporal transformer for object recognition with event cameras. In ICASSP 2023 - 2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), pages 1-5. IEEE, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Daniel Gehrig, Mathias Gehrig, John Monaghan, Davide Scaramuzza. Recurrent vision transformers for dense prediction. Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) Workshops. 2021.",
+      "citation": "Daniel Gehrig, Mathias Gehrig, John Monaghan, and Davide Scaramuzza. Recurrent vision transformers for dense prediction. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) Workshops, pages 3139-3148, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Qiyang Du, Ozan Sener, Silvio Savarese. Agree to disagree: Adaptive learning with gradient disagreement. Advances in Neural Information Processing Systems (NeurIPS). 2021.",
+      "citation": "Qiyang Du, Ozan Sener, and Silvio Savarese. Agree to disagree: Adaptive learning with gradient disagreement. In Advances in Neural Information Processing Systems (NeurIPS), 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Longxuan Jing, Yu Tian, Yujun Pei, Yibing Shen, Jiashi Feng. Understanding contrastive representation learning through alignment and uniformity on the hypersphere. 2022.",
+      "citation": "Longxuan Jing, Yu Tian, Yujun Pei, Yibing Shen, and Jiashi Feng. Understanding contrastive representation learning through alignment and uniformity on the hypersphere. In International Conference on Learning Representations (ICLR), 2022.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Yair Leviathan, Clemens Rosenbaum, Slav Petrov. Fast inference from transformers via speculative decoding. 2023.",
+      "citation": "Yair Leviathan, Clemens Rosenbaum, and Slav Petrov. Fast inference from transformers via speculative decoding. In ICML, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Wenwen Chang, Tal Schuster, Yann LeCun. Neural surgery for memorisation: Locating and removing verbatim recall neurons. 2024.",
+      "citation": "Wenwen Chang, Tal Schuster, and Yann LeCun. Neural surgery for memorisation: Locating and removing verbatim recall neurons. In NeurIPS, 2024.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "M. Garcia, A. Thompson. Applications of llms in legal document analysis. Journal of Legal Technology. 2024.",
+      "citation": "M. Garcia and A. Thompson. Applications of llms in legal document analysis. Journal of Legal Technology, 7(1):50-65, 2024.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "J. Smith, A. Patel. Leveraging large language models for financial forecasting. International Journal of Financial Technology. 2024.",
+      "citation": "J. Smith and A. Patel. Leveraging large language models for financial forecasting. International Journal of Financial Technology, 9(2):101-115, 2024.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "David Jones, et al.. Gpsa: Gene expression and histology-based spatial alignment. Nature Methods. 2023.",
+      "citation": "David Jones et al. Gpsa: Gene expression and histology-based spatial alignment. Nature Methods, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Zhihao Chen, Hantao Zhang, Yuhan Zhang, Zhanlin Hu, Quanquan Gu, Qing Zhang, Shuo Suo. Slat: a transformer-based method for simultaneous alignment and clustering of spatial transcriptomics data. Nature Communications. 2023.",
+      "citation": "Zhihao Chen, Hantao Zhang, Yuhan Zhang, Zhanlin Hu, Quanquan Gu, Qing Zhang, and Shuo Suo. Slat: a transformer-based method for simultaneous alignment and clustering of spatial transcriptomics data. Nature Communications, 14(1):5548, 2023.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "François Baccelli, Gérard H. Taché, Etienne Altman. Flow complexity and heavytailed delays in packet networks. Performance Evaluation. 2002.",
+      "citation": "François Baccelli, Gérard H. Taché, and Etienne Altman. Flow complexity and heavytailed delays in packet networks. Performance Evaluation, 49(1-4):427-449, 2002.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Saravanan Jebarajakirthy, Paurav Shukla, Prashant Palvia. Heavy-tailed distributions in online ad response: A marketing analytics perspective. Journal of Business Research. 2021.",
+      "citation": "Saravanan Jebarajakirthy, Paurav Shukla, and Prashant Palvia. Heavy-tailed distributions in online ad response: A marketing analytics perspective. Journal of Business Research, 124:818-830, 2021.",
       "GT": false
     },
     {
       "source_type": "neurips2025",
-      "citation": "Mehdi Azabou, Micah Weber, Wenlin Ma, et al.. Mineclip: Multimodal neural exploration of clip latents for automatic video annotation. 2022.",
+      "citation": "Mehdi Azabou, Micah Weber, Wenlin Ma, et al. Mineclip: Multimodal neural exploration of clip latents for automatic video annotation. arXiv preprint arXiv:2210.02870, 2022.",
       "GT": false
     }
   ]
