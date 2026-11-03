@@ -94,6 +94,13 @@ example `https://your-endpoint/v1`) and `LLM_MODEL` to a model it serves.
 Nothing is set by default, so no citation text is sent anywhere unless you
 configure an endpoint.
 
+The paper's results were obtained with `gpt-oss-20b`. The extraction model is
+only used to turn a citation string into fields, so future versions may switch
+to other open-weight models (for example if `gpt-oss-20b` is retired); retrieval,
+scoring and thresholds do not depend on it. Every benchmark run records the
+model in its output (`config.extraction_model`), so results can be compared
+across models by re-running the bundled benchmarks.
+
 Without an LLM endpoint the tool falls back to a regular-expression parser
 that extracts titles only, so the author and venue terms are treated as
 missing. Use an LLM for meaningful results. A free
