@@ -53,6 +53,7 @@ hallucination_detector/
 │   ├── neurips2025_v1.json
 │   ├── citeaudit_300_v2.json
 │   └── materials_pilot_v2.json
+├── analysis/               # notebook, raw tool exports and NeurIPS figures
 ├── scripts/
 │   ├── rescore_sensitivity.py   # re-score outputs under other weights/thresholds
 │   └── materials_pilot.py       # harvested-vs-fabricated materials pilot
@@ -307,9 +308,8 @@ python -m pytest tests
 
 Re-running end to end can differ slightly from the released outputs:
 Semantic Scholar's index changes over time and LLM extraction is not
-bit-reproducible across model versions. The analysis notebook and figures
-are in
-[harineralla/AtomGPT-Hallucination-Detector](https://github.com/harineralla/AtomGPT-Hallucination-Detector).
+bit-reproducible across model versions. The analysis notebook, the raw
+web-tool exports and the NeurIPS figures are in [`analysis/`](analysis).
 
 ## Citation
 
