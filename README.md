@@ -2,6 +2,7 @@
 
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 ![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/atomgptlab/hallucination_detector/blob/main/notebooks/quickstart.ipynb)
 
 Detect hallucinated (fabricated) citations in scientific manuscripts.
 Each reference is parsed into bibliographic fields by an LLM, matched
@@ -16,6 +17,10 @@ described in:
 > H. Neralla, J. Lee, A. H. Romero, K. Choudhary, *Hallucination Detector: A
 > hybrid LLM and Semantic Scholar tool calling for detecting hallucination in
 > scientific literature on AtomGPT.org* (under review).
+
+**Quick start:** try it in the browser with the
+[Colab notebook](https://colab.research.google.com/github/atomgptlab/hallucination_detector/blob/main/notebooks/quickstart.ipynb): check a few references, a pasted bibliography
+or a PDF, run a small benchmark slice, and explore the released results.
 
 ## How it works
 
@@ -54,6 +59,8 @@ hallucination_detector/
 │   ├── citeaudit_300_v2.json
 │   └── materials_pilot_v2.json
 ├── analysis/               # notebook, raw tool exports and NeurIPS figures
+├── notebooks/
+│   └── quickstart.ipynb    # Colab quick start
 ├── scripts/
 │   ├── rescore_sensitivity.py   # re-score outputs under other weights/thresholds
 │   └── materials_pilot.py       # harvested-vs-fabricated materials pilot
