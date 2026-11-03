@@ -66,16 +66,23 @@ hallucination_detector/
 ```bash
 pip install -r requirements.txt
 
-# LLM used for field extraction: any OpenAI-compatible endpoint
-export LLM_URL="https://your-endpoint/v1"
-export LLM_MODEL="gpt-oss-20b"        # the model used in the paper
-export LLM_API_KEY="..."               # if the endpoint needs one
+# LLM used for field extraction: the AtomGPT API (as in the paper)
+export LLM_URL="https://atomgpt.org/api"
+export LLM_MODEL="openai/gpt-oss-20b"  # the model used in the paper
+export LLM_API_KEY="sk-..."            # your AtomGPT API key (see below)
 
 # optional
 export SS_API_KEY="..."                # Semantic Scholar key (higher rate limit)
 export SS_MIN_INTERVAL=1.0             # seconds between Semantic Scholar calls
 export LLM_TIMEOUT=60
 ```
+
+To get an AtomGPT API key, sign in at [atomgpt.org](https://atomgpt.org)
+and open Profile → Settings → Account → API Keys. Any other
+OpenAI-compatible endpoint also works: set `LLM_URL` to its base URL (for
+example `https://your-endpoint/v1`) and `LLM_MODEL` to a model it serves.
+Nothing is set by default, so no citation text is sent anywhere unless you
+configure an endpoint.
 
 Without an LLM endpoint the tool falls back to a regular-expression parser
 that extracts titles only, so the author and venue terms are treated as
