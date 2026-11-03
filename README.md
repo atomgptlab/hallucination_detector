@@ -53,11 +53,14 @@ hallucination_detector/
 ├── data/                   # benchmarks used in the paper
 │   ├── neurips2025_hallucinated.json   # 100 confirmed fabrications
 │   ├── citeaudit_300.json              # 150 real + 150 fake
-│   └── materials_pilot.json            # 26 genuine materials references
+│   ├── materials_pilot.json            # 26 genuine materials references
+│   ├── materials_pilot_genuine.json    # 21 references harvested from 3 seed papers
+│   └── materials_pilot_fabricated.json # 16 fabricated materials citations
 ├── results/                # per-citation outputs reported in the paper
 │   ├── neurips2025_v1.json
 │   ├── citeaudit_300_v2.json
-│   └── materials_pilot_v2.json
+│   ├── materials_pilot_v2.json
+│   └── materials_pilot_harvested_fabricated.csv   # harvested-vs-fabricated pilot
 ├── analysis/               # notebook, raw tool exports and NeurIPS figures
 ├── notebooks/
 │   └── quickstart.ipynb    # Colab quick start
@@ -159,6 +162,7 @@ is read as is.
 | `neurips2025_hallucinated.json` | 100 | 0 / 100 | Confirmed hallucinated citations in accepted NeurIPS 2025 papers ([GPTZero audit](https://gptzero.me/news/neurips/)), verbatim as submitted |
 | `citeaudit_300.json` | 300 | 150 / 150 | Balanced 300-citation sample of the [CiteAudit](https://github.com/shiiiikw/CiteAudit) benchmark (91 real-world, 209 generated) |
 | `materials_pilot.json` | 26 | 26 / 0 | Genuine materials references in five types: articles, database papers, software, crystallographic databases, bare data entries |
+| `materials_pilot_genuine.json` + `materials_pilot_fabricated.json` | 37 | 21 / 16 | Pilot: references harvested from the JARVIS-DFT, ALIGNN and DiffractGPT papers (7 each, via the Semantic Scholar Graph API) and fabricated materials citations (plausible title, real venue, invented authors). The 16 titles, venues and years are those of the paper's Table S2; the original invented author lists were not retained, so the author lists here are a reconstruction |
 
 ### Results (default weights 60/25/15, verified ≥ 80)
 
@@ -168,6 +172,8 @@ is read as is.
 | CiteAudit 300 | v2 | 207 / 36 / 56 | 0.80 | 0.49 | 0.12 |
 | Materials (21 literature-backed) | v2 | 19 / 2 / 0 | n/a | n/a | 0.10 |
 | Materials (5 bare data entries) | v2 | 0 / 3 / 2 | n/a | n/a | 1.00 |
+| Materials pilot, harvested genuine | v2 | 21 / 0 / 0 | n/a | n/a | 0.00 |
+| Materials pilot, fabricated | v2 | 0 / 0 / 16 | n/a | 1.00 | n/a |
 
 A citation counts as flagged when it is not *verified*. One real CiteAudit
 citation was not run and is omitted (n = 299). On CiteAudit, generated
@@ -314,7 +320,8 @@ python run_benchmark.py --file data/neurips2025_hallucinated.json --scoring v1 \
     --output results/neurips2025_run.json
 
 # harvested-vs-fabricated materials pilot
-python scripts/materials_pilot.py fabricated_materials_citations.json
+python scripts/materials_pilot.py data/materials_pilot_fabricated.json \
+    --genuine data/materials_pilot_genuine.json -o results/materials_pilot_harvested_fabricated.csv
 
 # offline tests
 python -m pytest tests

@@ -1,0 +1,38 @@
+truth,title,status,score,title_score,author_score,journal_score,best_match
+genuine,"Materials Cloud, a platform for open computational science",verified,100.0,100.0,100.0,100.0,"Materials Cloud, a platform for open computational science"
+genuine,Computational search for magnetic and non-magnetic 2D topological materials using unified spin–orbit spillage screening,verified,100.0,100.0,100.0,100.0,Computational search for magnetic and non-magnetic 2D topological materials using unified spin–orbit spillage screening
+genuine,Machine learning enabled autonomous microstructural characterization in 3D samples,verified,100.0,100.0,100.0,100.0,Machine learning enabled autonomous microstructural characterization in 3D samples
+genuine,The Materials Research Platform: Defining the Requirements from User Stories,verified,100.0,100.0,100.0,100.0,The Materials Research Platform: Defining the Requirements from User Stories
+genuine,Enhancing materials property prediction by leveraging computational and experimental data using deep transfer learning,verified,100.0,100.0,100.0,100.0,Enhancing materials property prediction by leveraging computational and experimental data using deep transfer learning
+genuine,"High-throughput Density Functional Perturbation Theory and Machine Learning Predictions of Infrared, Piezoelectric and Dielectric Responses",verified,100.0,100.0,100.0,100.0,"High-throughput Density Functional Perturbation Theory and Machine Learning Predictions of Infrared, Piezoelectric and Dielectric Responses"
+genuine,PFHub: The Phase-Field Community Hub,verified,100.0,100.0,100.0,100.0,PFHub: The Phase-Field Community Hub
+genuine,A Deep Graph Neural Network-Based Mechanism for Social Recommendations,verified,100.0,100.0,100.0,100.0,A Deep Graph Neural Network-Based Mechanism for Social Recommendations
+genuine,"High-throughput search for magnetic topological materials using spin-orbit spillage, machine learning, and experiments",verified,100.0,100.0,100.0,100.0,"High-throughput search for magnetic topological materials using spin-orbit spillage, machine learning, and experiments"
+genuine,Fast and Uncertainty-Aware Directional Message Passing for Non-Equilibrium Molecules,verified,100.0,100.0,100.0,100.0,Fast and Uncertainty-Aware Directional Message Passing for Non-Equilibrium Molecules
+genuine,Molecular Mechanics-Driven Graph Neural Network with Multiplex Graph for Molecular Structures,verified,100.0,100.0,100.0,100.0,Molecular Mechanics-Driven Graph Neural Network with Multiplex Graph for Molecular Structures
+genuine,Heterogeneous Molecular Graph Neural Networks for Predicting Molecule Properties,verified,97.3,100.0,100.0,82.0,Heterogeneous Molecular Graph Neural Networks for Predicting Molecule Properties
+genuine,BonDNet: a graph neural network for the prediction of bond dissociation energies for charged molecules,verified,100.0,100.0,100.0,100.0,BonDNet: a graph neural network for the prediction of bond dissociation energies for charged molecules
+genuine,OrbNet: Deep Learning for Quantum Chemistry Using Symmetry-Adapted Atomic-Orbital Features,verified,100.0,100.0,100.0,100.0,OrbNet: Deep Learning for Quantum Chemistry Using Symmetry-Adapted Atomic-Orbital Features
+genuine,LSTM-based framework for predicting point defect percentage in semiconductor materials using simulated XRD patterns,verified,100.0,100.0,100.0,100.0,LSTM-based framework for predicting point defect percentage in semiconductor materials using simulated XRD patterns
+genuine,AtomGPT: Atomistic Generative Pretrained Transformer for Forward and Inverse Materials Design.,verified,100.0,100.0,100.0,100.0,AtomGPT: Atomistic Generative Pretrained Transformer for Forward and Inverse Materials Design.
+genuine,Crystal Structure Assignment for Unknown Compounds from X-ray Diffraction Patterns with Deep Learning.,verified,100.0,100.0,100.0,100.0,Crystal Structure Assignment for Unknown Compounds from X-ray Diffraction Patterns with Deep Learning.
+genuine,Leveraging large language models for predictive chemistry,verified,100.0,100.0,100.0,100.0,Leveraging large language models for predictive chemistry
+genuine,Machine Learning-Accelerated Discovery of Novel 2D Ferromagnetic Materials with Strong Magnetization,verified,100.0,100.0,100.0,100.0,Machine Learning-Accelerated Discovery of Novel 2D Ferromagnetic Materials with Strong Magnetization
+genuine,X-ray Diffraction Data Analysis by Machine Learning Methods—A Review,verified,100.0,100.0,100.0,100.0,X-ray Diffraction Data Analysis by Machine Learning Methods—A Review
+genuine,Advancements in High‐Throughput Screening and Machine Learning Design for 2D Ferromagnetism: A Comprehensive Review,verified,100.0,100.0,100.0,100.0,Advancements in High‐Throughput Screening and Machine Learning Design for 2D Ferromagnetism: A Comprehensive Review
+fabricated,Room-Temperature Superconductivity in Nitrogen-Doped Lutetium Bismuthate Monolayers,likely hallucinated,46.2,70.0,0.0,28.1,Short Note on the Observation of Ambient Condition Room Temperature Superconductivity in Nitrogen-Doped Lutetium Hydride
+fabricated,Giant Piezoelectric Response in Two-Dimensional Hafnium Selenotelluride,likely hallucinated,0.0,0.0,,,
+fabricated,Reversible Sodium Intercalation in Vanadium Oxyfluoride Kagome Cathodes,likely hallucinated,0.0,0.0,,,
+fabricated,Topological Flat Bands in Twisted Bilayer Chromium Ditelluride,likely hallucinated,54.1,73.5,0.0,66.7,Electronic correlations and topological states at the interface of twisted bilayer graphene and chromium oxychloride
+fabricated,Machine-Learned Interatomic Potentials for High-Entropy Boride Ceramics,likely hallucinated,52.0,74.3,0.0,49.3,Constructing and Evaluating Machine-Learned Interatomic Potentials for Li-Based Disordered Rocksalts.
+fabricated,Anomalous Thermal Hall Effect in Yttrium Iridate Pyrochlores,likely hallucinated,21.7,36.1,0.0,0.0,Numerical simulations for the nonequilibrium control of quantum materials
+fabricated,Colossal Dielectric Permittivity in Strontium Niobium Oxynitride Thin Films,likely hallucinated,0.0,0.0,,,
+fabricated,Ferroelectric Switching in Wurtzite Aluminum Scandium Phosphide,likely hallucinated,51.2,60.3,0.0,100.0,Kinetics of N‐ to M‐Polar Switching in Ferroelectric Al1−xScxN Capacitors
+fabricated,Enhanced Thermoelectric Figure of Merit in Nanostructured Copper Antimony Selenide,likely hallucinated,0.0,0.0,,,
+fabricated,Direct Observation of Skyrmion Lattices in Manganese Germanium Telluride,likely hallucinated,0.0,0.0,,,
+fabricated,First-Principles Design of Zirconium-Based Metal-Organic Frameworks for Xenon Capture,likely hallucinated,37.2,54.5,0.0,30.2,Advances in Metal–Organic Frameworks for the Removal of Chemical Warfare Agents: Insights into Hydrolysis and Oxidation Reaction Mechanisms
+fabricated,Pressure-Induced Metallization of Solid Ammonia Borane at 120 GPa,likely hallucinated,0.0,0.0,,,
+fabricated,Halide Perovskite Solar Cells Stabilized by Cesium Formamidinium Rubidium Alloying at Grain Boundaries,likely hallucinated,0.0,0.0,,,
+fabricated,Spin-Polarized Currents in Antiferromagnetic Ruthenium Dioxide Devices,likely hallucinated,57.4,70.7,0.0,100.0,Tilted spin current generated by the collinear antiferromagnet ruthenium dioxide
+fabricated,Deep-Learning Prediction of Superionic Conductivity in Argyrodite Solid Electrolytes,likely hallucinated,0.0,0.0,,,
+fabricated,Quantum Confinement Effects in Colloidal Indium Phosphide Nanoplatelets,likely hallucinated,34.9,50.5,0.0,30.8,Indium Phosphide Quantum Dots for Near‐Infrared Luminescence‐Based Bioimaging and Theranostics: From Photophysical Design to Clinical Translation

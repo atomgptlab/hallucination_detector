@@ -11,7 +11,9 @@ Reproduce the materials-science pilot (genuine vs fabricated citations).
 Usage
 -----
     export SS_API_KEY=...   # optional, raises the rate limit
-    python scripts/materials_pilot.py fabricated_materials_citations.json
+    python scripts/materials_pilot.py data/materials_pilot_fabricated.json \\
+        --genuine data/materials_pilot_genuine.json \\
+        -o results/materials_pilot_harvested_fabricated.csv
 """
 
 import argparse
@@ -90,12 +92,25 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("fabricated", help="JSON file of fabricated citations")
     ap.add_argument("-o", "--output", default="materials_pilot_results.csv")
+    ap.add_argument(
+        "--genuine",
+        help="JSON of genuine references: read if it exists, otherwise "
+        "harvested from the seed manuscripts and written here",
+    )
     args = ap.parse_args(argv)
 
-    genuine = []
-    for seed in SEEDS:
-        genuine += harvest(seed)
-        time.sleep(2)
+    if args.genuine and os.path.exists(args.genuine):
+        with open(args.genuine, encoding="utf-8") as f:
+            genuine = json.load(f)
+    else:
+        genuine = []
+        for seed, name in SEEDS.items():
+            for ref in harvest(seed):
+                genuine.append(dict(ref, seed=name))
+            time.sleep(2)
+        if args.genuine:
+            with open(args.genuine, "w", encoding="utf-8") as f:
+                json.dump(genuine, f, indent=2, ensure_ascii=False)
     with open(args.fabricated, encoding="utf-8") as f:
         fabricated = json.load(f)
 

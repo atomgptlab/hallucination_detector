@@ -1,0 +1,263 @@
+[
+  {
+    "title": "Materials Cloud, a platform for open computational science",
+    "authors": [
+      "Leopold Talirz",
+      "Snehal Kumbhar",
+      "Elsa Passaro",
+      "Aliaksandr V. Yakutovich",
+      "Valeria Granata",
+      "F. Gargiulo"
+    ],
+    "journal": "Scientific Data",
+    "year": "2020",
+    "seed": "JARVIS-DFT"
+  },
+  {
+    "title": "Computational search for magnetic and non-magnetic 2D topological materials using unified spin–orbit spillage screening",
+    "authors": [
+      "Kamal Choudhary",
+      "K. Garrity",
+      "Jie Jiang",
+      "R. Pachter",
+      "F. Tavazza"
+    ],
+    "journal": "npj Computational Materials",
+    "year": "2020",
+    "seed": "JARVIS-DFT"
+  },
+  {
+    "title": "Machine learning enabled autonomous microstructural characterization in 3D samples",
+    "authors": [
+      "Henry Chan",
+      "M. Cherukara",
+      "T. Loeffler",
+      "B. Narayanan",
+      "S. Sankaranarayanan"
+    ],
+    "journal": "npj Computational Materials",
+    "year": "2020",
+    "seed": "JARVIS-DFT"
+  },
+  {
+    "title": "The Materials Research Platform: Defining the Requirements from User Stories",
+    "authors": [
+      "M. Aykol",
+      "J. Hummelshøj",
+      "Abraham Anapolsky",
+      "Koutarou Aoyagi",
+      "M. Bazant",
+      "T. Bligaard"
+    ],
+    "journal": "Matter",
+    "year": "2019",
+    "seed": "JARVIS-DFT"
+  },
+  {
+    "title": "Enhancing materials property prediction by leveraging computational and experimental data using deep transfer learning",
+    "authors": [
+      "Dipendra Jha",
+      "Kamal Choudhary",
+      "F. Tavazza",
+      "W. Liao",
+      "Alok N. Choudhary",
+      "Carelyn Campbell"
+    ],
+    "journal": "Nature Communications",
+    "year": "2019",
+    "seed": "JARVIS-DFT"
+  },
+  {
+    "title": "High-throughput Density Functional Perturbation Theory and Machine Learning Predictions of Infrared, Piezoelectric and Dielectric Responses",
+    "authors": [
+      "Kamal Choudhary",
+      "K. Garrity",
+      "Vinit Sharma",
+      "A. J. Biacchi",
+      "A. H. Hight Walker",
+      "F. Tavazza"
+    ],
+    "journal": "npj Computational Materials",
+    "year": "2019",
+    "seed": "JARVIS-DFT"
+  },
+  {
+    "title": "PFHub: The Phase-Field Community Hub",
+    "authors": [
+      "D. Wheeler",
+      "T. Keller",
+      "S. DeWitt",
+      "A. Jokisaari",
+      "D. Schwen",
+      "J. Guyer"
+    ],
+    "journal": "Journal of Open Research Software",
+    "year": "2019",
+    "seed": "JARVIS-DFT"
+  },
+  {
+    "title": "A Deep Graph Neural Network-Based Mechanism for Social Recommendations",
+    "authors": [
+      "Zhi-Wei Guo",
+      "Heng Wang"
+    ],
+    "journal": "IEEE Transactions on Industrial Informatics",
+    "year": "2021",
+    "seed": "ALIGNN"
+  },
+  {
+    "title": "High-throughput search for magnetic topological materials using spin-orbit spillage, machine learning, and experiments",
+    "authors": [
+      "Kamal Choudhary",
+      "K. Garrity",
+      "N. Ghimire",
+      "Naween Anand",
+      "F. Tavazza"
+    ],
+    "journal": "Physical review B",
+    "year": "2021",
+    "seed": "ALIGNN"
+  },
+  {
+    "title": "Fast and Uncertainty-Aware Directional Message Passing for Non-Equilibrium Molecules",
+    "authors": [
+      "Johannes Klicpera",
+      "S. Giri",
+      "J. Margraf",
+      "Stephan Gunnemann"
+    ],
+    "journal": "arXiv.org",
+    "year": "2020",
+    "seed": "ALIGNN"
+  },
+  {
+    "title": "Molecular Mechanics-Driven Graph Neural Network with Multiplex Graph for Molecular Structures",
+    "authors": [
+      "Shuo Zhang",
+      "Yang Liu",
+      "Lei Xie"
+    ],
+    "journal": "arXiv.org",
+    "year": "2020",
+    "seed": "ALIGNN"
+  },
+  {
+    "title": "Heterogeneous Molecular Graph Neural Networks for Predicting Molecule Properties",
+    "authors": [
+      "Ze-Ren Shui",
+      "G. Karypis"
+    ],
+    "journal": "Industrial Conference on Data Mining",
+    "year": "2020",
+    "seed": "ALIGNN"
+  },
+  {
+    "title": "BonDNet: a graph neural network for the prediction of bond dissociation energies for charged molecules",
+    "authors": [
+      "Mingjian Wen",
+      "Samuel M. Blau",
+      "E. Spotte-Smith",
+      "S. Dwaraknath",
+      "K. Persson"
+    ],
+    "journal": "Chemical Science",
+    "year": "2020",
+    "seed": "ALIGNN"
+  },
+  {
+    "title": "OrbNet: Deep Learning for Quantum Chemistry Using Symmetry-Adapted Atomic-Orbital Features",
+    "authors": [
+      "Zhuoran Qiao",
+      "Matthew Welborn",
+      "Anima Anandkumar",
+      "F. Manby",
+      "T. Miller"
+    ],
+    "journal": "Journal of Chemical Physics",
+    "year": "2020",
+    "seed": "ALIGNN"
+  },
+  {
+    "title": "LSTM-based framework for predicting point defect percentage in semiconductor materials using simulated XRD patterns",
+    "authors": [
+      "Mehran Motamedi",
+      "Reza Shidpour",
+      "M. Ezoji"
+    ],
+    "journal": "Scientific Reports",
+    "year": "2024",
+    "seed": "DiffractGPT"
+  },
+  {
+    "title": "AtomGPT: Atomistic Generative Pretrained Transformer for Forward and Inverse Materials Design.",
+    "authors": [
+      "Kamal Choudhary"
+    ],
+    "journal": "Journal of Physical Chemistry Letters",
+    "year": "2024",
+    "seed": "DiffractGPT"
+  },
+  {
+    "title": "Crystal Structure Assignment for Unknown Compounds from X-ray Diffraction Patterns with Deep Learning.",
+    "authors": [
+      "Li-Tao Chen",
+      "Bingxu Wang",
+      "Wen-Tao Zhang",
+      "Shisheng Zheng",
+      "Zhe-Feng Chen",
+      "Ming-Zheng Zhang"
+    ],
+    "journal": "Journal of the American Chemical Society",
+    "year": "2024",
+    "seed": "DiffractGPT"
+  },
+  {
+    "title": "Leveraging large language models for predictive chemistry",
+    "authors": [
+      "K. Jablonka",
+      "P. Schwaller",
+      "Andres Ortega‐Guerrero",
+      "Berend Smit"
+    ],
+    "journal": "Nature Machine Intelligence",
+    "year": "2024",
+    "seed": "DiffractGPT"
+  },
+  {
+    "title": "Machine Learning-Accelerated Discovery of Novel 2D Ferromagnetic Materials with Strong Magnetization",
+    "authors": [
+      "Chao Xin",
+      "Yaohui Yin",
+      "Bingqian Song",
+      "Zhen Fan",
+      "Yongli Song",
+      "Feng Pan"
+    ],
+    "journal": "Chip",
+    "year": "2023",
+    "seed": "DiffractGPT"
+  },
+  {
+    "title": "X-ray Diffraction Data Analysis by Machine Learning Methods—A Review",
+    "authors": [
+      "Vasile-Adrian Surdu",
+      "Romuald Győrgy"
+    ],
+    "journal": "Applied Sciences",
+    "year": "2023",
+    "seed": "DiffractGPT"
+  },
+  {
+    "title": "Advancements in High‐Throughput Screening and Machine Learning Design for 2D Ferromagnetism: A Comprehensive Review",
+    "authors": [
+      "Chao Xin",
+      "Bingqian Song",
+      "Guang-Yong Jin",
+      "Yongli Song",
+      "Feng Pan"
+    ],
+    "journal": "Advanced Theory and Simulations",
+    "year": "2023",
+    "seed": "DiffractGPT"
+  }
+]
